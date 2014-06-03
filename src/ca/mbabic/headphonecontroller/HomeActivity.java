@@ -53,7 +53,7 @@ public class HomeActivity extends Activity {
 						MediaButtonReceiver.class
 				)
 		);
-		
+			
 		//registerReceivers();
 		
 	}

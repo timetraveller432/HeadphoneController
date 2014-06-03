@@ -25,10 +25,12 @@
         
         <receiver 
             android:name=".MediaButtonReceiver"
-           	android:enabled="true" >
+           	android:enabled="true" 
+           	android:exported="true">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>          
         </receiver>
         
     </application>
