@@ -9,44 +9,55 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 import ca.mbabic.headphonecontroller.statemachine.HCStateMachine;
 
+/**
+ * Receives presses of the media button and invokes appropriate HCStateMachine
+ * methods.
+ * @author Marko Babic
+ */
 public class MediaButtonReceiver extends BroadcastReceiver {
 
-	private final String LOG_TAG = ".MediaButtonReceiver";
+	/**
+	 * Logging tag.
+	 */
+	private final String TAG = ".MediaButtonReceiver";
 
+	/**
+	 * Reference to state machine keeping track of time elapsed between key
+	 * presses.
+	 */
 	private static HCStateMachine stateMachine = HCStateMachine.getInstance();
-	
+
 	@Override
 	public void onReceive(Context cxt, Intent intent) {
 
 		KeyEvent event;
-		Long currentTime;
-		
-		// For now, simply log the intent action and set result data.
-		Log.i(LOG_TAG, "INTENT RECEIVED: " + intent.getAction());
 
 		// Ensure that we have received the intent action of the type
 		// we expected.
-		if (!Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction()))
+		if (!Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())) {
+			Log.e(TAG,
+					"Received intent action type = " + intent.getAction());
 			return;
+		}
 
 		event = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
 
 		if (event == null) {
-			Log.e(LOG_TAG, "Received intent with null key event!");
+			Log.e(TAG, "Received intent with null key event!");
 			return;
 		}
-		
-		switch(event.getKeyCode()) {
+
+		switch (event.getKeyCode()) {
 		case KeyEvent.KEYCODE_HEADSETHOOK:
-			Log.i(LOG_TAG, "event.getAction() = " + event.getAction());
+			
 			if (event.getAction() == KeyEvent.ACTION_UP) {
-				
 				stateMachine.keyUp();
-				
 			}
-		
+
 		}
-		
+
+		// Stop other apps from seeing the event and interfering with our
+		// actions.
 		setResultData(null);
 		abortBroadcast();
 	}
