@@ -12,7 +12,8 @@ import android.util.Log;
 
 /**
  * State machine keeping track of the state of the button presses.
- * 
+ * Implementation of the State Pattern.
+ * See: http://sourcemaking.com/design_patterns/state
  * @author Marko Babic
  */
 public class HCStateMachine {
