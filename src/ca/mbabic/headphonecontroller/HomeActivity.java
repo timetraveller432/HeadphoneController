@@ -1,27 +1,61 @@
 package ca.mbabic.headphonecontroller;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.TextView;
 
 public class HomeActivity extends Activity {
 
+	
+	private static final int FILTER_PRIORITY = 2147483647;
+	
+	/**
+	 * TextArea displaying string related to the type of input captured
+	 * from the attached headphones.
+	 */
+	private TextView mInputDisplay;
+	
+	/**
+	 * TextArea displaying string related to the type of output being generated
+	 * in response to the headphone input.
+	 */
+	private TextView mOutputDisplay;
+	
+	/**
+	 * Receiver registered to handle media button presses.
+	 */
+	private MediaButtonReceiver mMediaBtnReceiver = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_home);
 
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
+		AudioManager am;
+		
+		super.onCreate(savedInstanceState);		
+		
+		setContentView(R.layout.activity_home);
+		
+		mInputDisplay 	= (TextView) findViewById(R.id.input_display);
+		mOutputDisplay 	= (TextView) findViewById(R.id.output_display);
+
+		am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		
+		am.registerMediaButtonEventReceiver(
+				new ComponentName(
+						this,
+						MediaButtonReceiver.class
+				)
+		);
+		
+		//registerReceivers();
+		
 	}
 
 	@Override
@@ -44,21 +78,30 @@ public class HomeActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	
 	/**
-	 * A placeholder fragment containing a simple view.
+	 * Registers BroadCastReceivers listeners capturing input from headphones.
 	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
+	private void registerReceivers() {
+		
+		IntentFilter intentFilter;
+		
+		if (mMediaBtnReceiver == null) {
+			
+			mMediaBtnReceiver = new MediaButtonReceiver();
+			
 		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_home, container,
-					false);
-			return rootView;
-		}
+		
+		intentFilter = new IntentFilter(Intent.ACTION_MEDIA_BUTTON);
+		intentFilter.setPriority(FILTER_PRIORITY);
+		
+		registerReceiver(
+				mMediaBtnReceiver, 
+				intentFilter
+		);
+		
 	}
 
 }
+
+
