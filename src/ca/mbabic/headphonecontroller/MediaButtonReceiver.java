@@ -20,9 +20,6 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 
 		KeyEvent event;
 		Long currentTime;
-
-		// Get current time.
-		currentTime = SystemClock.uptimeMillis();
 		
 		// For now, simply log the intent action and set result data.
 		Log.i(LOG_TAG, "INTENT RECEIVED: " + intent.getAction());
@@ -44,7 +41,7 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 			Log.i(LOG_TAG, "event.getAction() = " + event.getAction());
 			if (event.getAction() == KeyEvent.ACTION_UP) {
 				
-				stateMachine.buttonPress(currentTime);
+				stateMachine.keyUp();
 				
 			}
 		

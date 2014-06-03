@@ -4,6 +4,7 @@
 
 package ca.mbabic.headphonecontroller.statemachine;
 
+import java.lang.Thread.State;
 import java.util.concurrent.Semaphore;
 
 import android.os.SystemClock;
@@ -15,8 +16,14 @@ import android.util.Log;
  */
 public class HCStateMachine {
 
+	/**
+	 * Class specific logging tag.
+	 */
 	private static final String TAG = ".statemachine.HCStateMachine";
 	
+	/**
+	 * Interval to wait between button presses.
+	 */
 	// TODO: make configurable
 	private static final long BTN_PRESS_INTERVAL = 400;
 	
@@ -25,39 +32,54 @@ public class HCStateMachine {
 	 */
 	private static volatile HCStateMachine instance = null;
 	
+	/**
+	 * Reference to the state in which the machine is currently in.
+	 */
 	private static HCState currentState;
+	
+	/**
+	 * The starting state of the machine.
+	 */
 	private static HCState startState = new InactiveState();
 	
+	/**
+	 * Time left until countdown thread will execute the current state's 
+	 * command.
+	 */
 	private static long timeToExecution;
+	
+	/**
+	 * The amount of time the countdown thread will sleep between acquiring
+	 * the semaphore and updating timeToExecution.
+	 */
 	private static final long SLEEP_INTERVAL = 100;
-	private static boolean isCountingDown = false;
+	
+	/**
+	 * Semaphore used to lock access to shared variable timeToExecution.
+	 */
 	private static Semaphore countdownSemaphore = new Semaphore(1);
-	private Thread countdownThread = new Thread(countdownRunnable);
+	
+	/**
+	 * Thread in which the countdown to execution monitoring functionality
+	 * is implemented.
+	 */
+	private Thread countdownThread;
 	
 	static Runnable countdownRunnable = new Runnable() {
 		
 		public void run() {
-			
-			long startTime = SystemClock.uptimeMillis();
-			
-			isCountingDown = true;
+						
 			timeToExecution = BTN_PRESS_INTERVAL;
-			
-			Log.i(TAG, "CountdownThread started!");
-			
+						
 			while (timeToExecution > 0) {
-			
+				
 				try {
 					Thread.sleep(SLEEP_INTERVAL);
 					countdownSemaphore.acquire();
 					timeToExecution -= SLEEP_INTERVAL;
-					Log.i(TAG, "CountdownThread timeToExecution: " + timeToExecution);
 				} catch (InterruptedException ie) {
-					
 					Log.e(TAG, "Coundown thread interrupted!");
-					isCountingDown = false;
 					return;
-					
 				} finally {
 					countdownSemaphore.release();
 				}
@@ -65,18 +87,27 @@ public class HCStateMachine {
 			}
 			
 			// Countdown expired, execute current state's command.
+			// TODO: this should be synchronized ... and we should take one
+			// last check here to make sure timeToExecution <= 0 and if not
+			// start looping again and not execute anything ...
 			currentState.executeCommand();
 			currentState = startState;
-			isCountingDown = false;
 		}
 		
 	};
 	
-	
+	/**
+	 * Private constructor.  Get global application reference to state machine
+	 * via getInstance().
+	 */
 	private HCStateMachine() {
 		currentState = startState;
 	}
 	
+	/**
+	 * @return
+	 * 		Singleton instance of HCStateMachine.
+	 */
 	public static HCStateMachine getInstance() {
 		if (instance == null) {
 			synchronized (HCStateMachine.class) {
@@ -92,19 +123,20 @@ public class HCStateMachine {
 	/**
 	 * Indicate to state machine that the media button has been pressed on
 	 * the headphones.
-	 * TODO: should _always_ result in state transition to next
-	 * state?? (probably yes)
-	 * @param pressTime
-	 * 		The time at which the button was pressed.
+	 * TODO: keep track of long clicks... should not transition to next state
+	 * at end of such a command.
 	 */
-	public void buttonPress(long pressTime) {
+	public void keyUp() {
 		makeStateTransition();
 	}
 	
+	/**
+	 * Transition to next state as appropriate given currentState.
+	 */
 	private void makeStateTransition() {
 		
 		HCState nextState = currentState.getNextState();
-		
+				
 		if (currentState.isTerminal()) {
 			currentState = startState;
 			stopCountdownToExecution();
@@ -115,13 +147,17 @@ public class HCStateMachine {
 		}
 	}
 	
+	/**
+	 * Call to start or reset a countdown to execution of the current state's
+	 * command.
+	 */
 	private void startCountdownToExecution() {
 		
 		try {
 			
 			countdownSemaphore.acquire();
 			
-			if (!isCountingDown) {
+			if (countdownThread.getState() != State.TERMINATED) {
 				countdownThread = new Thread(countdownRunnable);
 				countdownThread.start();
 			} else {
@@ -135,6 +171,9 @@ public class HCStateMachine {
 		}
 	}
 	
+	/**
+	 * Called to cancel countdown to execution thread.
+	 */
 	private void stopCountdownToExecution() {
 		
 		countdownThread.interrupt();
