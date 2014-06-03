@@ -6,6 +6,7 @@ package ca.mbabic.headphonecontroller.statemachine;
 
 import java.util.concurrent.Semaphore;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 /**
@@ -24,8 +25,8 @@ public class HCStateMachine {
 	 */
 	private static volatile HCStateMachine instance = null;
 	
-	private HCState currentState;
-	private HCState startState = new InactiveState();
+	private static HCState currentState;
+	private static HCState startState = new InactiveState();
 	
 	private static long timeToExecution;
 	private static final long SLEEP_INTERVAL = 100;
@@ -37,16 +38,20 @@ public class HCStateMachine {
 		
 		public void run() {
 			
+			long startTime = SystemClock.uptimeMillis();
+			
 			isCountingDown = true;
+			timeToExecution = BTN_PRESS_INTERVAL;
+			
+			Log.i(TAG, "CountdownThread started!");
 			
 			while (timeToExecution > 0) {
 			
 				try {
-					
 					Thread.sleep(SLEEP_INTERVAL);
 					countdownSemaphore.acquire();
 					timeToExecution -= SLEEP_INTERVAL;
-					
+					Log.i(TAG, "CountdownThread timeToExecution: " + timeToExecution);
 				} catch (InterruptedException ie) {
 					
 					Log.e(TAG, "Coundown thread interrupted!");
@@ -60,8 +65,8 @@ public class HCStateMachine {
 			}
 			
 			// Countdown expired, execute current state's command.
-			
-			
+			currentState.executeCommand();
+			currentState = startState;
 			isCountingDown = false;
 		}
 		
@@ -93,9 +98,7 @@ public class HCStateMachine {
 	 * 		The time at which the button was pressed.
 	 */
 	public void buttonPress(long pressTime) {
-		
-		Log.i(TAG, "Button press called with value pressTime = " + pressTime);
-		currentState = currentState.getNextState();
+		makeStateTransition();
 	}
 	
 	private void makeStateTransition() {
@@ -104,8 +107,8 @@ public class HCStateMachine {
 		
 		if (currentState.isTerminal()) {
 			currentState = startState;
-			currentState.executeCommand();
 			stopCountdownToExecution();
+			currentState.executeCommand();
 		} else {
 			currentState = nextState;
 			startCountdownToExecution();
@@ -119,11 +122,12 @@ public class HCStateMachine {
 			countdownSemaphore.acquire();
 			
 			if (!isCountingDown) {
-				countdownThread.run();
-			} 
-			
-			timeToExecution = BTN_PRESS_INTERVAL;
-			
+				countdownThread = new Thread(countdownRunnable);
+				countdownThread.start();
+			} else {
+				timeToExecution = BTN_PRESS_INTERVAL;
+			}
+						
 		} catch (Exception e) {
 			Log.e(TAG, e.toString());
 		} finally {
