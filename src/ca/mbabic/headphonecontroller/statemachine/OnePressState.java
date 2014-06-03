@@ -14,6 +14,13 @@ import android.widget.Toast;
  */
 public class OnePressState extends HCState {
 
+	
+	public OnePressState() {
+		isActive = true;
+		isTerminal = false;
+		nextState = new TwoPressState();
+	}
+	
 	private static final String TAG = ".statemachine.OnePressState";
 	@Override
 	public void executeCommand() {
@@ -21,7 +28,7 @@ public class OnePressState extends HCState {
 		Log.i(TAG, "Executing OnePressState command.");
 				
 	}
-
+	
 	
 	
 }

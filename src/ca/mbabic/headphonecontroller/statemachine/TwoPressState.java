@@ -12,10 +12,23 @@ public class TwoPressState extends HCState {
 
 	private static final String TAG = ".statemachine.TwoPressState";
 	
+	
+	public TwoPressState() {
+		isActive = true;
+		isTerminal = false;
+		nextState = new ThreePressState();
+	}
+	
+	
 	@Override
 	public void executeCommand() {
 
 		Log.i(TAG, "Executing TwoPressState command.");
 				
+	}
+	
+	@Override
+	public HCState getNextState() {
+		return nextState;
 	}
 }

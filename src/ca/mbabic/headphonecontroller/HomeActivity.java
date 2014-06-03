@@ -53,9 +53,7 @@ public class HomeActivity extends Activity {
 						MediaButtonReceiver.class
 				)
 		);
-			
-		//registerReceivers();
-		
+					
 	}
 
 	@Override
@@ -76,30 +74,6 @@ public class HomeActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	
-	/**
-	 * Registers BroadCastReceivers listeners capturing input from headphones.
-	 */
-	private void registerReceivers() {
-		
-		IntentFilter intentFilter;
-		
-		if (mMediaBtnReceiver == null) {
-			
-			mMediaBtnReceiver = new MediaButtonReceiver();
-			
-		}
-		
-		intentFilter = new IntentFilter(Intent.ACTION_MEDIA_BUTTON);
-		intentFilter.setPriority(FILTER_PRIORITY);
-		
-		registerReceiver(
-				mMediaBtnReceiver, 
-				intentFilter
-		);
-		
 	}
 
 }
