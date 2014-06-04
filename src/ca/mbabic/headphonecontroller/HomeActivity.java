@@ -1,52 +1,50 @@
 package ca.mbabic.headphonecontroller;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import ca.mbabic.headphonecontroller.services.MediaButtonListenerService;
 import ca.mbabic.headphonecontroller.services.MediaButtonReceiver;
 
 public class HomeActivity extends Activity {
 
-	private static final int FILTER_PRIORITY = 2147483647;
+	private static final String CONFIGURE_TABSTRING = "Configure";
 
-	/**
-	 * TextArea displaying string related to the type of input captured from the
-	 * attached headphones.
-	 */
-	private TextView mInputDisplay;
+	private static final String ABOUT_TABSTRING = "About";
 
-	/**
-	 * TextArea displaying string related to the type of output being generated
-	 * in response to the headphone input.
-	 */
-	private TextView mOutputDisplay;
-
-	/**
-	 * Receiver registered to handle media button presses.
-	 */
-	private MediaButtonReceiver mMediaBtnReceiver = null;
+	private static ConfigurationFragment mConfigFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
-		// AudioManager am;
 		Intent mediaButtonListenerService;
+		Bundle args;
+		final ActionBar tabBar;
 
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_home);
 
-		mInputDisplay = (TextView) findViewById(R.id.input_display);
-		mOutputDisplay = (TextView) findViewById(R.id.output_display);
-
+		// Start media button listener service.
 		mediaButtonListenerService = new Intent(getApplicationContext(),
 				MediaButtonListenerService.class);
 
 		startService(mediaButtonListenerService);
+
+		// Init UI elements.
+		tabBar = getActionBar();
+		tabBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+		mConfigFragment = new ConfigurationFragment();
+
+		tabBar.addTab(tabBar.newTab().setText(CONFIGURE_TABSTRING)
+				.setTabListener(new TabListener(mConfigFragment)));
 
 	}
 
@@ -68,6 +66,37 @@ public class HomeActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	public static class TabListener implements ActionBar.TabListener {
+
+		private final Fragment mFragment;
+
+		public TabListener(Fragment fragment) {
+			mFragment = fragment;
+		}
+
+		@Override
+		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+
+			if (mFragment != null) {
+				ft.replace(R.id.fragment_container, mFragment);
+			}
+
+		}
+
+		@Override
+		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+			if (mFragment != null) {
+				ft.remove(mFragment);
+			}
+		}
+
+		@Override
+		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+			// Not implemented.
+		}
+
 	}
 
 }

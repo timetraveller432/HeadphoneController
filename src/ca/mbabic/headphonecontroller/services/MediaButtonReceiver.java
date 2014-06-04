@@ -19,7 +19,7 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 	/**
 	 * Logging tag.
 	 */
-	private final String TAG = ".MediaButtonReceiver";
+	private final String TAG = ".services.MediaButtonReceiver";
 
 	/**
 	 * Reference to state machine keeping track of time elapsed between key
@@ -31,6 +31,7 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 	public void onReceive(Context cxt, Intent intent) {
 
 		KeyEvent event;
+		int action;
 		
 		// Ensure that we have received the intent action of the type
 		// we expected.
@@ -47,11 +48,19 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 			return;
 		}
 
+		action = event.getAction();
+		
 		switch (event.getKeyCode()) {
 		case KeyEvent.KEYCODE_HEADSETHOOK:
 			
-			if (event.getAction() == KeyEvent.ACTION_UP) {
+			if (action == KeyEvent.ACTION_UP) {
+				
 				stateMachine.keyUp();
+				
+			} else if (action == KeyEvent.ACTION_DOWN) {
+				
+				Log.d(TAG, "KEYDOWN ACTION RECEIVED.");
+				
 			}
 
 		}
