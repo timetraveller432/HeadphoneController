@@ -1,59 +1,53 @@
 package ca.mbabic.headphonecontroller;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import ca.mbabic.headphonecontroller.services.MediaButtonListenerService;
+import ca.mbabic.headphonecontroller.services.MediaButtonReceiver;
 
 public class HomeActivity extends Activity {
 
-	
 	private static final int FILTER_PRIORITY = 2147483647;
-	
+
 	/**
-	 * TextArea displaying string related to the type of input captured
-	 * from the attached headphones.
+	 * TextArea displaying string related to the type of input captured from the
+	 * attached headphones.
 	 */
 	private TextView mInputDisplay;
-	
+
 	/**
 	 * TextArea displaying string related to the type of output being generated
 	 * in response to the headphone input.
 	 */
 	private TextView mOutputDisplay;
-	
+
 	/**
 	 * Receiver registered to handle media button presses.
 	 */
 	private MediaButtonReceiver mMediaBtnReceiver = null;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
-		AudioManager am;
-		
-		super.onCreate(savedInstanceState);		
-		
-		setContentView(R.layout.activity_home);
-		
-		mInputDisplay 	= (TextView) findViewById(R.id.input_display);
-		mOutputDisplay 	= (TextView) findViewById(R.id.output_display);
+		// AudioManager am;
+		Intent mediaButtonListenerService;
 
-		am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		
-		am.registerMediaButtonEventReceiver(
-				new ComponentName(
-						this,
-						MediaButtonReceiver.class
-				)
-		);
-					
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.activity_home);
+
+		mInputDisplay = (TextView) findViewById(R.id.input_display);
+		mOutputDisplay = (TextView) findViewById(R.id.output_display);
+
+		mediaButtonListenerService = new Intent(getApplicationContext(),
+				MediaButtonListenerService.class);
+
+		startService(mediaButtonListenerService);
+
 	}
 
 	@Override
@@ -77,5 +71,3 @@ public class HomeActivity extends Activity {
 	}
 
 }
-
-

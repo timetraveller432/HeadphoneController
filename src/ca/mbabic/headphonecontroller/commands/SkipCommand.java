@@ -5,11 +5,12 @@ import android.content.Intent;
 import ca.mbabic.headphonecontroller.HCApplication;
 
 /**
- * Command executing the play and pausing of media files.
+ * Command executing the "skip song" command.
  * @author Marko Babic
  */
-public class PlayPauseCommand implements HCCommand {
+public class SkipCommand implements HCCommand {
 
+	
 	@Override
 	public void execute() {
 		Context cxt;
@@ -18,11 +19,8 @@ public class PlayPauseCommand implements HCCommand {
 		cxt = HCApplication.getInstance();
 		
 		intent= new Intent("com.android.music.musicservicecommand");
-		intent.putExtra("command", "togglepause");
+		intent.putExtra("command", "next");
 		cxt.sendOrderedBroadcast(intent, null);
 	}
 
-	
-	
-	
 }

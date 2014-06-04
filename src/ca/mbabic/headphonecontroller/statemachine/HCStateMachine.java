@@ -7,17 +7,24 @@ package ca.mbabic.headphonecontroller.statemachine;
 import java.lang.Thread.State;
 import java.util.concurrent.Semaphore;
 
-import android.os.SystemClock;
 import android.util.Log;
+import ca.mbabic.headphonecontroller.services.MediaButtonListenerService;
 
 /**
  * State machine keeping track of the state of the button presses.
- * Implementation of the State Pattern.
- * See: http://sourcemaking.com/design_patterns/state
+ * Implementation of the State Pattern. See:
+ * http://sourcemaking.com/design_patterns/state
+ * 
  * @author Marko Babic
  */
 public class HCStateMachine {
 
+	/**
+	 * Reference to MediaButtonListenerService such that after command execution
+	 * we can re-register ourselves as exclusive media button player listener.
+	 */
+	private static MediaButtonListenerService listenerService;
+	
 	/**
 	 * Class specific logging tag.
 	 */
@@ -93,6 +100,8 @@ public class HCStateMachine {
 			// last check here to make sure timeToExecution <= 0 and if not
 			// start looping again and not execute anything ...
 			currentState.executeCommand();
+			Log.i(TAG, "HEREERHJ:ELRJK:ELKRJ :LEKRJ :ELKRJ :ELKRJ :LEKJR ");
+			listenerService.registerAsMediaButtonListener();
 			currentState = startState;
 		}
 
@@ -106,6 +115,10 @@ public class HCStateMachine {
 		currentState = startState;
 	}
 
+	public void setService(MediaButtonListenerService mbls) {
+		listenerService = mbls;
+	}
+	
 	/**
 	 * @return Singleton instance of HCStateMachine.
 	 */
