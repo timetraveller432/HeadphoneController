@@ -28,7 +28,7 @@ public class TwoPressState extends HCState {
 	public void executeCommand() {
 
 		Log.i(TAG, "Executing TwoPressState command.");
-		//commandContext.execute();
+		commandContext.execute();
 				
 	}
 	

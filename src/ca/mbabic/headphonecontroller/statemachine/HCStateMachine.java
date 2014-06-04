@@ -100,7 +100,6 @@ public class HCStateMachine {
 			// last check here to make sure timeToExecution <= 0 and if not
 			// start looping again and not execute anything ...
 			currentState.executeCommand();
-			Log.i(TAG, "HEREERHJ:ELRJK:ELKRJ :LEKRJ :ELKRJ :ELKRJ :LEKJR ");
 			listenerService.registerAsMediaButtonListener();
 			currentState = startState;
 		}

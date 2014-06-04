@@ -27,7 +27,7 @@ public class ThreePressState extends HCState {
 	@Override
 	public void executeCommand() {
 		Log.i(TAG, "Executing ThreePressState command.");
-		//commandContext.execute();
+		commandContext.execute();
 
 	}
 

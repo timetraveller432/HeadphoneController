@@ -32,8 +32,6 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 
 		KeyEvent event;
 		
-		Log.e(TAG, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
 		// Ensure that we have received the intent action of the type
 		// we expected.
 		if (!Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())) {

@@ -18,7 +18,7 @@ public class MediaStateChangeReceiver extends BroadcastReceiver {
 		
 		action = intent.getAction();
 		
-		Log.i(TAG, "Inside MediaStateChangeReceiver");
+		Log.d(TAG, "Received broadcast.");
 		
 		if (action.equals("com.android.music.playstatechanged")) {
 			if (mListenerService != null) {
