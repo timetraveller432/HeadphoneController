@@ -5,13 +5,14 @@ package ca.mbabic.headphonecontroller;
 
 import android.app.Activity;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 /**
- * Fragment displaying UI elements related to
+ * Fragment displaying UI elements related to the list of configurable inputs.
  * 
  * @author Marko Babic
  * 
@@ -50,7 +51,22 @@ public class ConfigurationFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO
+
+		Intent selectCommandIntent;
+		Bundle args;
+		String item;
+
+		item = (String) getListView().getItemAtPosition(position);
+
+		selectCommandIntent = new Intent(getActivity(),
+				SelectCommandActivity.class);
+		
+		args = new Bundle();
+		args.putString(SelectCommandActivity.INPUT_SEQUENCE_KEY, item);
+		
+		startActivityForResult(selectCommandIntent, 0);
+		
+
 	}
 
 }

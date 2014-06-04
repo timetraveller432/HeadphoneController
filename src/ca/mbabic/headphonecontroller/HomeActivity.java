@@ -45,6 +45,9 @@ public class HomeActivity extends Activity {
 
 		tabBar.addTab(tabBar.newTab().setText(CONFIGURE_TABSTRING)
 				.setTabListener(new TabListener(mConfigFragment)));
+		
+		tabBar.addTab(tabBar.newTab().setText(ABOUT_TABSTRING)
+				.setTabListener(new TabListener(new ConfigurationFragment())));
 
 	}
 
