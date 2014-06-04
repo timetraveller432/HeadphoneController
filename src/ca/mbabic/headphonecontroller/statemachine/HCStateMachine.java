@@ -52,13 +52,13 @@ public class HCStateMachine {
 	private static HCState startState = new InactiveState();
 
 	/**
-	 * Time left until countdown thread will execute the current state's
+	 * Time left until count down thread will execute the current state's
 	 * command.
 	 */
 	private static long timeToExecution;
 
 	/**
-	 * The amount of time the countdown thread will sleep between acquiring the
+	 * The amount of time the count down thread will sleep between acquiring the
 	 * semaphore and updating timeToExecution.
 	 */
 	private static final long SLEEP_INTERVAL = 100;
@@ -66,15 +66,15 @@ public class HCStateMachine {
 	/**
 	 * Semaphore used to lock access to shared variable timeToExecution.
 	 */
-	private static Semaphore countdownSemaphore = new Semaphore(1);
+	private static Semaphore countDownSemaphore = new Semaphore(1);
 
 	/**
-	 * Thread in which the countdown to execution monitoring functionality is
+	 * Thread in which the count down to execution monitoring functionality is
 	 * implemented.
 	 */
-	private Thread countdownThread;
+	private Thread countDownThread;
 
-	static Runnable countdownRunnable = new Runnable() {
+	static Runnable countDownRunnable = new Runnable() {
 
 		public void run() {
 
@@ -84,18 +84,18 @@ public class HCStateMachine {
 
 				try {
 					Thread.sleep(SLEEP_INTERVAL);
-					countdownSemaphore.acquire();
+					countDownSemaphore.acquire();
 					timeToExecution -= SLEEP_INTERVAL;
 				} catch (InterruptedException ie) {
 					Log.e(TAG, "Coundown thread interrupted!");
 					return;
 				} finally {
-					countdownSemaphore.release();
+					countDownSemaphore.release();
 				}
 
 			}
 
-			// Countdown expired, execute current state's command.
+			// Count down expired, execute current state's command.
 			// TODO: this should be synchronized ... and we should take one
 			// last check here to make sure timeToExecution <= 0 and if not
 			// start looping again and not execute anything ...
@@ -150,30 +150,30 @@ public class HCStateMachine {
 		HCState nextState = currentState.getNextState();
 
 		if (currentState.isTerminal()) {
-			currentState = startState;
-			stopCountdownToExecution();
+			stopCountDownToExecution();
 			currentState.executeCommand();
+			currentState = startState;
 		} else {
 			currentState = nextState;
-			startCountdownToExecution();
+			startCountDownToExecution();
 		}
 	}
 
 	/**
-	 * Call to start or reset a countdown to execution of the current state's
+	 * Call to start or reset a count down to execution of the current state's
 	 * command.
 	 */
-	private void startCountdownToExecution() {
+	private void startCountDownToExecution() {
 
 		try {
 
-			countdownSemaphore.acquire();
+			countDownSemaphore.acquire();
 
-			if (countdownThread == null
-					|| countdownThread.getState() == State.TERMINATED) {
+			if (countDownThread == null
+					|| countDownThread.getState() == State.TERMINATED) {
 
-				countdownThread = new Thread(countdownRunnable);
-				countdownThread.start();
+				countDownThread = new Thread(countDownRunnable);
+				countDownThread.start();
 			} else {
 				timeToExecution = BTN_PRESS_INTERVAL;
 			}
@@ -181,18 +181,18 @@ public class HCStateMachine {
 		} catch (Exception e) {
 			Log.e(TAG, e.toString());
 		} finally {
-			countdownSemaphore.release();
+			countDownSemaphore.release();
 		}
 	}
 
 	/**
-	 * Called to cancel countdown to execution thread.
+	 * Called to cancel count down to execution thread.
 	 */
-	private void stopCountdownToExecution() {
+	private void stopCountDownToExecution() {
 
-		countdownThread.interrupt();
+		countDownThread.interrupt();
 		try {
-			countdownThread.join();
+			countDownThread.join();
 		} catch (Exception e) {
 			Log.e(TAG, e.toString());
 		}
