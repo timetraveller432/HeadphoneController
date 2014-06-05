@@ -1,5 +1,7 @@
 package ca.mbabic.headphonecontroller.commands;
 
+import ca.mbabic.headphonecontroller.configuration.HCConfigAdapter;
+
 /**
  * Determines at run time the correct command to run for a particular state and
  * executes the command as appropriate.
@@ -9,22 +11,16 @@ package ca.mbabic.headphonecontroller.commands;
  */
 public class CommandExecutor {
 
+	private HCConfigAdapter adapter;
 	
-	
-	public CommandExecutor(/* Reference to configuration module */) {
-
-		// TODO
-		
+	public CommandExecutor(HCConfigAdapter configAdapter) {
+		adapter = configAdapter;
 	}
 	
-	public static void executeCommandForState(Class state) {
+	public void executeCommandForState(Class state) {
 		
-		String stateKey;
-		
-		stateKey = state.getName();
-		
-		
-		
+		adapter.getCommandContext(state).execute();		
+	
 	}
 
 }
