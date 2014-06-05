@@ -49,7 +49,7 @@ public class HCStateMachine {
 	/**
 	 * The starting state of the machine.
 	 */
-	private static HCState startState = new InactiveState();
+	private static HCState startState;
 
 	/**
 	 * Time left until count down thread will execute the current state's
@@ -111,6 +111,7 @@ public class HCStateMachine {
 	 * via getInstance().
 	 */
 	private HCStateMachine() {
+		startState = new InactiveState();
 		currentState = startState;
 	}
 

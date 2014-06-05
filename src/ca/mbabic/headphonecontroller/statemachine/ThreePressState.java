@@ -4,8 +4,7 @@
 package ca.mbabic.headphonecontroller.statemachine;
 
 import android.util.Log;
-import ca.mbabic.headphonecontroller.commands.HCCommandContext;
-import ca.mbabic.headphonecontroller.commands.PreviousCommand;
+import ca.mbabic.headphonecontroller.commands.CommandExecutor;
 /**
  * State representing the media button having been clicked exactly thrice since
  * the last command execution/interval expiration.
@@ -17,17 +16,15 @@ public class ThreePressState extends HCState {
 	private static final String TAG = ".statemachine.ThreePressState";
 
 	public ThreePressState() {
-		isActive = true;
 		isTerminal = true;
 		nextState = null;
-		commandContext = new HCCommandContext();
-		commandContext.setCommand(new PreviousCommand());
+		executor = CommandExecutor.getInstance();
 	}
 	
 	@Override
 	public void executeCommand() {
 		Log.i(TAG, "Executing ThreePressState command.");
-		commandContext.execute();
+		executor.executeCommandForState(ThreePressState.class);;
 
 	}
 

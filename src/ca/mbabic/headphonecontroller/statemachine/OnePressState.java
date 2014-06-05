@@ -4,6 +4,7 @@
 package ca.mbabic.headphonecontroller.statemachine;
 
 import android.util.Log;
+import ca.mbabic.headphonecontroller.commands.CommandExecutor;
 import ca.mbabic.headphonecontroller.commands.HCCommandContext;
 import ca.mbabic.headphonecontroller.commands.PlayPauseCommand;
 
@@ -14,14 +15,11 @@ import ca.mbabic.headphonecontroller.commands.PlayPauseCommand;
  *
  */
 public class OnePressState extends HCState {
-
 	
 	public OnePressState() {
-		isActive = true;
 		isTerminal = false;
 		nextState = new TwoPressState();
-		commandContext = new HCCommandContext();
-		commandContext.setCommand(new PlayPauseCommand());
+		executor = CommandExecutor.getInstance();
 	}
 	
 	private static final String TAG = ".statemachine.OnePressState";
@@ -29,7 +27,7 @@ public class OnePressState extends HCState {
 	public void executeCommand() {
 
 		Log.i(TAG, "Executing OnePressState command.");
-		commandContext.execute();
+		executor.executeCommandForState(OnePressState.class);;
 				
 	}
 	

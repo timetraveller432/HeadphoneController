@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
+import ca.mbabic.headphonecontroller.commands.CommandExecutor;
+import ca.mbabic.headphonecontroller.configuration.HCConfigAdapter;
 import ca.mbabic.headphonecontroller.statemachine.HCStateMachine;
 
 public class MediaButtonListenerService extends Service {
 	
-	public static HCStateMachine mStateMachine = HCStateMachine.getInstance();
+	public static HCStateMachine mStateMachine;
 	
 	public static MediaStateChangeReceiver mMediaStateChangeReceiver;
 	
@@ -19,10 +22,24 @@ public class MediaButtonListenerService extends Service {
 	@Override
 	public void onCreate() {
 		
+		HCConfigAdapter configAdapter;
 		IntentFilter intentFilter;
 		
 		super.onCreate();
 
+		// Write default configuration values if necessary.
+		configAdapter = new HCConfigAdapter(
+				PreferenceManager.getDefaultSharedPreferences(this), this);
+		
+		if (!configAdapter.hasApplicationRunBefore()) {
+			configAdapter.writeDefaultConfigurationValues();
+			configAdapter.setHasRunBefore();			
+		}		
+		
+		// Instantiate CommandExecutor.
+		CommandExecutor.createInstance(configAdapter);
+		
+		mStateMachine = HCStateMachine.getInstance();
 		mStateMachine.setService(this);
 		
 		// Register media state change receiver

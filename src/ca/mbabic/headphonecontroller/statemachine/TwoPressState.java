@@ -1,6 +1,7 @@
 package ca.mbabic.headphonecontroller.statemachine;
 
 import android.util.Log;
+import ca.mbabic.headphonecontroller.commands.CommandExecutor;
 import ca.mbabic.headphonecontroller.commands.HCCommandContext;
 import ca.mbabic.headphonecontroller.commands.SkipCommand;
 
@@ -14,22 +15,16 @@ public class TwoPressState extends HCState {
 
 	private static final String TAG = ".statemachine.TwoPressState";
 	
-	
 	public TwoPressState() {
-		isActive = true;
 		isTerminal = false;
 		nextState = new ThreePressState();
-		commandContext = new HCCommandContext();
-		commandContext.setCommand(new SkipCommand());
+		executor = CommandExecutor.getInstance();
 	}
-	
-	
+
 	@Override
 	public void executeCommand() {
-
 		Log.i(TAG, "Executing TwoPressState command.");
-		commandContext.execute();
-				
+		executor.executeCommandForState(TwoPressState.class);;
 	}
 	
 	@Override

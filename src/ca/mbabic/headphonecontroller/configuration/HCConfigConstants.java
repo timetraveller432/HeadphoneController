@@ -2,7 +2,9 @@ package ca.mbabic.headphonecontroller.configuration;
 
 import java.util.HashMap;
 
+import android.provider.Telephony;
 import android.telephony.TelephonyManager;
+import ca.mbabic.headphonecontroller.commands.NoOpCommand;
 import ca.mbabic.headphonecontroller.commands.PlayPauseCommand;
 import ca.mbabic.headphonecontroller.commands.PreviousCommand;
 import ca.mbabic.headphonecontroller.commands.SkipCommand;
@@ -12,6 +14,14 @@ import ca.mbabic.headphonecontroller.statemachine.TwoPressState;
 
 public class HCConfigConstants {
 
+	
+	/**
+	 * Storage key for boolean value indicating whether the application has run
+	 * before or not.
+	 */
+	public static final String HAS_RUN_BEFORE_KEY = 
+			"ca.mbabic.headphonecontroller.configuration.HAS_RUN_BEFORE";
+	
 	/**
 	 * Storage key for the OnePress state.
 	 */
@@ -38,12 +48,12 @@ public class HCConfigConstants {
 
 	};
 
-	public static final String COMMAND_DELIMITER = "|";
+	public static final String COMMAND_DELIMITER = "::";
 
 	/**
 	 * {value #NO_OP_CMD_KEY} Storage value for no-op command.
 	 */
-	public static final String NO_OP_CMD_KEY = "NO-OP";
+	public static final String NO_OP_CMD_KEY = NoOpCommand.class.getName();
 
 	/**
 	 * Storage value for the play/pause command.
@@ -85,6 +95,12 @@ public class HCConfigConstants {
 
 		VALID_CMD_STATES = new HashMap<String, int[]>();
 
+		// No-op command.
+		VALID_CMD_STATES.put(NO_OP_CMD_KEY, new int[] {
+				TelephonyManager.CALL_STATE_IDLE,
+				TelephonyManager.CALL_STATE_OFFHOOK,
+				TelephonyManager.CALL_STATE_RINGING });
+
 		// Play/pause command.
 		VALID_CMD_STATES.put(PLAYPAUSE_CMD_KEY,
 				new int[] { TelephonyManager.CALL_STATE_IDLE });
@@ -96,5 +112,13 @@ public class HCConfigConstants {
 		// Repeat/Previous song command.
 		VALID_CMD_STATES.put(PREVIOUS_CMD_KEY,
 				new int[] { TelephonyManager.CALL_STATE_IDLE });
+		
+		// TODO: answer phone command
+		
+		// TODO: hang up command
+		
+		// TODO: hold/unhold command
+		
+		// ...
 	}
 }

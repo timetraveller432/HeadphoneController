@@ -21,12 +21,11 @@ import ca.mbabic.headphonecontroller.commands.HCCommandFactory;
  */
 public class HCConfigAdapter {
 
-
 	/**
 	 * Class specific logging tag.
 	 */
 	private static final String TAG = ".configuration.HCConfigAdapter";
-	
+
 	/**
 	 * Reference to shared preferences object storing configuration details.
 	 */
@@ -57,7 +56,7 @@ public class HCConfigAdapter {
 	/**
 	 * 
 	 * Command string stored in format:
-	 * 		CMD_FOR_CALL_IDLE|CMD_FOR_CALL_RINGING|CMD_FOR_CALL_OFFHOOK
+	 * CMD_FOR_CALL_IDLE|CMD_FOR_CALL_RINGING|CMD_FOR_CALL_OFFHOOK
 	 * 
 	 * @param stateKey
 	 * @param cmdKey
@@ -101,88 +100,113 @@ public class HCConfigAdapter {
 				newCmdStr += cmdKey;
 			}
 
-			// Put delimiter between the first/second and second/third 
+			// Put delimiter between the first/second and second/third
 			// commands.
 			if (i < N_CALL_STATES - 1) {
 				newCmdStr += COMMAND_DELIMITER;
 			}
 		}
-		
+
 		// Store and commit changes to shared preferences.
 		prefs.edit().putString(stateKey, newCmdStr).commit();
 
 	}
 
 	/**
-	 * Given a state class for which 
+	 * Given a state class for which
+	 * 
 	 * @param state
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes") 
+	@SuppressWarnings("rawtypes")
 	public HCCommandContext getCommandContext(Class state) {
 
 		HCCommand cmd;
 		String[] cmds;
 		String storedCmdStr, cmdStr;
-		
+
+		Log.d(TAG, "getCommandContext called with state = " + state.getName());
+
 		storedCmdStr = prefs.getString(state.getName(), null);
+
+		Log.d(TAG, "storedCmdStr = " + storedCmdStr);
 		
 		cmds = storedCmdStr.split(COMMAND_DELIMITER);
-		
+
+		Log.d(TAG, "cmds[0], cmds[1], cmds[2] = " + cmds[0] + ", " + cmds[1]
+				+ ", " + cmds[2]);
+
 		cmdStr = cmds[telephonyManager.getCallState()];
 		
+		Log.d(TAG, "cmdStr = " + cmdStr);
+
 		try {
-		
+
 			cmd = HCCommandFactory.createInstance(cmdStr);
-		
+
 			return new HCCommandContext(cmd);
-			
+
 		} catch (Exception e) {
-			
+
 			Log.e(TAG, e.getMessage());
-						
+
 		}
-		
+
 		// Got here only if exception was thrown, return null and let
 		// program crash as this implies fatal error anyway.
-		return null;		
-		
+		return null;
+
 	}
 
 	/**
-	 * Writes the default configuration values to the SharedPreferences
-	 * object.
+	 * Writes the default configuration values to the SharedPreferences object.
 	 */
 	public void writeDefaultConfigurationValues() {
-	
+
 		Editor edit;
 		String cmdStr;
-		
+
 		edit = prefs.edit();
-		
+
 		// Write default values for OnePressState.
-		cmdStr = PLAYPAUSE_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY +
-				COMMAND_DELIMITER + NO_OP_CMD_KEY;
+		cmdStr = PLAYPAUSE_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY
+				+ COMMAND_DELIMITER + NO_OP_CMD_KEY;
 		edit.putString(ONE_PRESS_STATE_KEY, cmdStr).commit();
-		
+
 		// Write default values for TwoPressState.
-		cmdStr = SKIP_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY + 
-				COMMAND_DELIMITER + NO_OP_CMD_KEY;
+		cmdStr = SKIP_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY
+				+ COMMAND_DELIMITER + NO_OP_CMD_KEY;
 		edit.putString(TWO_PRESS_STATE_KEY, cmdStr).commit();
-		
+
 		// Write default values for ThreePressState.
-		cmdStr = PREVIOUS_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY +
-				COMMAND_DELIMITER + NO_OP_CMD_KEY;
+		cmdStr = PREVIOUS_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY
+				+ COMMAND_DELIMITER + NO_OP_CMD_KEY;
 		edit.putString(THREE_PRESS_STATE_KEY, cmdStr).commit();
-			
+
 	}
-	
-	
+
+	/**
+	 * Retrieve the value of the "hasRunBefore" key from the shared preferences
+	 * object.
+	 */
+	public boolean hasApplicationRunBefore() {
+		return prefs.getBoolean(HAS_RUN_BEFORE_KEY, false);
+	}
+
+	/**
+	 * Set the value of the "hasRunBefore" key in the shared preferences object
+	 * to be true.
+	 */
+	public void setHasRunBefore() {
+		prefs.edit().putBoolean(HAS_RUN_BEFORE_KEY, true);
+	}
+
 	// Validation functions
 	/**
 	 * Inspects the validity of the given string as a key for a stored state.
+	 * 
 	 * @param key
-	 * 		The state key whose validity is to be established.
+	 *            The state key whose validity is to be established.
 	 * @return True if valid, false otherwise.
 	 */
 	private boolean isValidStateKey(String key) {
@@ -191,11 +215,12 @@ public class HCConfigAdapter {
 
 	/**
 	 * Inspects the validity of the given string as a key for a stored state.
+	 * 
 	 * @param key
-	 * 		Command string to be validated.	
-	 * 	 
+	 *            Command string to be validated.
+	 * 
 	 * @param callState
-	 * 		The call state associated with the command.
+	 *            The call state associated with the command.
 	 * 
 	 * @return True if valid, false otherwise.
 	 */

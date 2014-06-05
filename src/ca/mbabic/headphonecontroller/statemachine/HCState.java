@@ -3,6 +3,7 @@
  */
 package ca.mbabic.headphonecontroller.statemachine;
 
+import ca.mbabic.headphonecontroller.commands.CommandExecutor;
 import ca.mbabic.headphonecontroller.commands.HCCommand;
 import ca.mbabic.headphonecontroller.commands.HCCommandContext;
 
@@ -14,13 +15,12 @@ import ca.mbabic.headphonecontroller.commands.HCCommandContext;
  */
 public abstract class HCState {
 	/**
-	 * Command/reference to command to be executed when state machine is in
-	 * this given state.
+	 * Reference to CommandExecutor used to executre correct command for the
+	 * state at run time.
 	 */
-	// TODO
-	protected HCCommandContext commandContext = new HCCommandContext();
+	protected CommandExecutor executor;
+
 	protected HCState nextState = null;
-	protected boolean isActive = false;
 	protected boolean isTerminal = false;
 	
 	// Method to be implemented for now

@@ -6,11 +6,13 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import ca.mbabic.headphonecontroller.configuration.HCConfigAdapter;
 import ca.mbabic.headphonecontroller.services.MediaButtonListenerService;
-import ca.mbabic.headphonecontroller.services.MediaButtonReceiver;
 
 public class HomeActivity extends Activity {
 
@@ -45,7 +47,7 @@ public class HomeActivity extends Activity {
 
 		tabBar.addTab(tabBar.newTab().setText(CONFIGURE_TABSTRING)
 				.setTabListener(new TabListener(mConfigFragment)));
-		
+
 		tabBar.addTab(tabBar.newTab().setText(ABOUT_TABSTRING)
 				.setTabListener(new TabListener(new ConfigurationFragment())));
 
