@@ -2,26 +2,25 @@ package ca.mbabic.headphonecontroller.configuration;
 
 import java.util.HashMap;
 
-import android.provider.Telephony;
 import android.telephony.TelephonyManager;
+import ca.mbabic.headphonecontroller.commands.MuteMusicCommand;
 import ca.mbabic.headphonecontroller.commands.NoOpCommand;
 import ca.mbabic.headphonecontroller.commands.PlayPauseCommand;
 import ca.mbabic.headphonecontroller.commands.PreviousCommand;
 import ca.mbabic.headphonecontroller.commands.SkipCommand;
+import ca.mbabic.headphonecontroller.statemachine.FourPressState;
 import ca.mbabic.headphonecontroller.statemachine.OnePressState;
 import ca.mbabic.headphonecontroller.statemachine.ThreePressState;
 import ca.mbabic.headphonecontroller.statemachine.TwoPressState;
 
 public class HCConfigConstants {
 
-	
 	/**
 	 * Storage key for boolean value indicating whether the application has run
 	 * before or not.
 	 */
-	public static final String HAS_RUN_BEFORE_KEY = 
-			"ca.mbabic.headphonecontroller.configuration.HAS_RUN_BEFORE";
-	
+	public static final String HAS_RUN_BEFORE_KEY = "ca.mbabic.headphonecontroller.configuration.HAS_RUN_BEFORE";
+
 	/**
 	 * Storage key for the OnePress state.
 	 */
@@ -40,11 +39,18 @@ public class HCConfigConstants {
 			.getName();
 
 	/**
+	 * Storage key for the FourPress state.
+	 */
+	public static final String FOUR_PRESS_STATE_KEY = FourPressState.class
+			.getName();
+
+	/**
 	 * Array of valid state storage keys.
 	 */
 	public static final String[] STATE_KEYS = new String[] {
 
-	ONE_PRESS_STATE_KEY, TWO_PRESS_STATE_KEY, THREE_PRESS_STATE_KEY
+	ONE_PRESS_STATE_KEY, TWO_PRESS_STATE_KEY, THREE_PRESS_STATE_KEY,
+			FOUR_PRESS_STATE_KEY
 
 	};
 
@@ -70,6 +76,12 @@ public class HCConfigConstants {
 	 * Storage value for the repeat/previous song command.
 	 */
 	public static final String PREVIOUS_CMD_KEY = PreviousCommand.class
+			.getName();
+
+	/**
+	 * Storage value for the mute song command.
+	 */
+	public static final String MUTE_MUSIC_CMD_KEY = MuteMusicCommand.class
 			.getName();
 
 	/**
@@ -113,12 +125,16 @@ public class HCConfigConstants {
 		VALID_CMD_STATES.put(PREVIOUS_CMD_KEY,
 				new int[] { TelephonyManager.CALL_STATE_IDLE });
 		
+		// Mute music command.
+		VALID_CMD_STATES.put(MUTE_MUSIC_CMD_KEY, 
+				new int[] { TelephonyManager.CALL_STATE_IDLE });
+
 		// TODO: answer phone command
-		
+
 		// TODO: hang up command
-		
+
 		// TODO: hold/unhold command
-		
+
 		// ...
 	}
 }

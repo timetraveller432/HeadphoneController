@@ -16,8 +16,8 @@ public class ThreePressState extends HCState {
 	private static final String TAG = ".statemachine.ThreePressState";
 
 	public ThreePressState() {
-		isTerminal = true;
-		nextState = null;
+		isTerminal = false;
+		nextState = new FourPressState();
 		executor = CommandExecutor.getInstance();
 	}
 	
