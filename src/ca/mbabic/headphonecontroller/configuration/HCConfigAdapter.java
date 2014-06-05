@@ -11,7 +11,10 @@ import java.util.Arrays;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+import ca.mbabic.headphonecontroller.commands.HCCommand;
 import ca.mbabic.headphonecontroller.commands.HCCommandContext;
+import ca.mbabic.headphonecontroller.commands.HCCommandFactory;
 
 /**
  * Defines methods allowing other classes access to configuration settings.
@@ -22,6 +25,11 @@ import ca.mbabic.headphonecontroller.commands.HCCommandContext;
 public class HCConfigAdapter {
 
 
+	/**
+	 * Class specific logging tag.
+	 */
+	private static final String TAG = ".configuration.HCConfigAdapter";
+	
 	/**
 	 * Reference to shared preferences object storing configuration details.
 	 */
@@ -98,43 +106,56 @@ public class HCConfigAdapter {
 
 	public HCCommandContext getCommandContext(Class state) {
 
-		switch (telephonyManager.getCallState()) {
-
-		case TelephonyManager.CALL_STATE_IDLE:
-			return getCallIdleCommand(state);
-
-		case TelephonyManager.CALL_STATE_RINGING:
-
-		case TelephonyManager.CALL_STATE_OFFHOOK:
-			// At least one call exists that is dialing, active, or on hold,
-			// and no calls are ringing or waiting.
-
-			// Fall through for now.
-
+		HCCommand cmd;
+		String[] cmds;
+		String storedCmdStr, cmdStr;
+		
+		storedCmdStr = prefs.getString(state.getName(), null);
+		
+		cmds = storedCmdStr.split(COMMAND_DELIMITER);
+		
+		cmdStr = cmds[telephonyManager.getCallState()];
+		
+		try {
+		
+			cmd = HCCommandFactory.createInstance(cmdStr);
+		
+			return new HCCommandContext(cmd);
+			
+		} catch (Exception e) {
+			
+			Log.e(TAG, e.getMessage());
+						
 		}
-
-		// TODO: return no-op
-		// Below will cause application crash (for now).
-		return null;
-
-	}
-
-	private HCCommandContext getCallIdleCommand(Class state) {
-
-		return null;
+		
+		// Got here only if exception was thrown, return null and let
+		// program crash as this implies fatal error anyway.
+		return null;		
+		
 	}
 
 	// Validation functions
 
 	/**
-	 * 
+	 * Inspects the validity of the given string as a key for a stored state.
 	 * @param key
-	 * @return
+	 * 		The state key whose validity is to be established.
+	 * @return True if valid, false otherwise.
 	 */
 	private boolean isValidStateKey(String key) {
 		return Arrays.asList(STATE_KEYS).contains(key);
 	}
 
+	/**
+	 * Inspects the validity of the given string as a key for a stored state.
+	 * @param key
+	 * 		Command string to be validated.	
+	 * 	 
+	 * @param callState
+	 * 		The call state associated with the command.
+	 * 
+	 * @return True if valid, false otherwise.
+	 */
 	private boolean isValidCommandKey(String key, int callState) {
 
 		// Ensure key is valid.

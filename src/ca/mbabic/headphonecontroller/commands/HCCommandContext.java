@@ -7,6 +7,10 @@ public class HCCommandContext {
 	public HCCommandContext() {
 	}
 	
+	public HCCommandContext(HCCommand cmd) {
+		command = cmd;
+	}
+	
 	public void execute() {
 		command.execute();
 	}
