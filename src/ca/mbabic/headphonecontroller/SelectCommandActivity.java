@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -95,4 +96,16 @@ public class SelectCommandActivity extends ListActivity {
 		setListAdapter(adapter);
 
 	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		
+		RadioButton radioButton = (RadioButton)
+				v.findViewById(R.id.command_selection_button);
+		
+		radioButton.setChecked(true);
+		
+	}
+	
 }
