@@ -1,15 +1,12 @@
 package ca.mbabic.headphonecontroller.configuration;
 
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.CMD_KEYS;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.COMMAND_DELIMITER;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.N_CALL_STATES;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.STATE_KEYS;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.VALID_CMD_STATES;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.*;
 
 import java.util.Arrays;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import ca.mbabic.headphonecontroller.commands.HCCommand;
@@ -57,6 +54,16 @@ public class HCConfigAdapter {
 				.getSystemService(Context.TELEPHONY_SERVICE);
 	}
 
+	/**
+	 * 
+	 * Command string stored in format:
+	 * 		CMD_FOR_CALL_IDLE|CMD_FOR_CALL_RINGING|CMD_FOR_CALL_OFFHOOK
+	 * 
+	 * @param stateKey
+	 * @param cmdKey
+	 * @param callState
+	 * @throws Exception
+	 */
 	public void setStateCommand(String stateKey, String cmdKey, int callState)
 			throws Exception {
 
@@ -94,6 +101,8 @@ public class HCConfigAdapter {
 				newCmdStr += cmdKey;
 			}
 
+			// Put delimiter between the first/second and second/third 
+			// commands.
 			if (i < N_CALL_STATES - 1) {
 				newCmdStr += COMMAND_DELIMITER;
 			}
@@ -104,6 +113,12 @@ public class HCConfigAdapter {
 
 	}
 
+	/**
+	 * Given a state class for which 
+	 * @param state
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes") 
 	public HCCommandContext getCommandContext(Class state) {
 
 		HCCommand cmd;
@@ -134,8 +149,36 @@ public class HCConfigAdapter {
 		
 	}
 
+	/**
+	 * Writes the default configuration values to the SharedPreferences
+	 * object.
+	 */
+	public void writeDefaultConfigurationValues() {
+	
+		Editor edit;
+		String cmdStr;
+		
+		edit = prefs.edit();
+		
+		// Write default values for OnePressState.
+		cmdStr = PLAYPAUSE_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY +
+				COMMAND_DELIMITER + NO_OP_CMD_KEY;
+		edit.putString(ONE_PRESS_STATE_KEY, cmdStr).commit();
+		
+		// Write default values for TwoPressState.
+		cmdStr = SKIP_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY + 
+				COMMAND_DELIMITER + NO_OP_CMD_KEY;
+		edit.putString(TWO_PRESS_STATE_KEY, cmdStr).commit();
+		
+		// Write default values for ThreePressState.
+		cmdStr = PREVIOUS_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY +
+				COMMAND_DELIMITER + NO_OP_CMD_KEY;
+		edit.putString(THREE_PRESS_STATE_KEY, cmdStr).commit();
+			
+	}
+	
+	
 	// Validation functions
-
 	/**
 	 * Inspects the validity of the given string as a key for a stored state.
 	 * @param key
