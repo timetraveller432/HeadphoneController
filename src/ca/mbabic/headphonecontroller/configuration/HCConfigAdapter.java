@@ -1,18 +1,17 @@
 package ca.mbabic.headphonecontroller.configuration;
 
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.CMD_KEYS;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.COMMAND_DELIMITER;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.N_CALL_STATES;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.STATE_KEYS;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.VALID_CMD_STATES;
+
 import java.util.Arrays;
-import java.util.HashMap;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.telephony.TelephonyManager;
 import ca.mbabic.headphonecontroller.commands.HCCommandContext;
-import ca.mbabic.headphonecontroller.commands.PlayPauseCommand;
-import ca.mbabic.headphonecontroller.commands.PreviousCommand;
-import ca.mbabic.headphonecontroller.commands.SkipCommand;
-import ca.mbabic.headphonecontroller.statemachine.OnePressState;
-import ca.mbabic.headphonecontroller.statemachine.ThreePressState;
-import ca.mbabic.headphonecontroller.statemachine.TwoPressState;
 
 /**
  * Defines methods allowing other classes access to configuration settings.
@@ -22,81 +21,16 @@ import ca.mbabic.headphonecontroller.statemachine.TwoPressState;
  */
 public class HCConfigAdapter {
 
-	/**
-	 * Storage key for the OnePress state.
-	 */
-	public static final String ONE_PRESS_STATE_KEY = OnePressState.class
-			.getName();
-	
-	/**
-	 * Storage key for the TwoPress state.
-	 */
-	public static final String TWO_PRESS_STATE_KEY = TwoPressState.class
-			.getName();
-	/**
-	 * Storage key for the ThreePress state.
-	 */
-	public static final String THREE_PRESS_STATE_KEY = ThreePressState.class
-			.getName();
 
 	/**
-	 * Array of valid state storage keys.
+	 * Reference to shared preferences object storing configuration details.
 	 */
-	public static final String[] STATE_KEYS = new String[] {
-
-	ONE_PRESS_STATE_KEY, TWO_PRESS_STATE_KEY, THREE_PRESS_STATE_KEY
-
-	};
-
-	/**
-	 * Storage value for the play/puase command.
-	 */
-	public static final String PLAYPAUSE_CMD_KEY = PlayPauseCommand.class
-			.getName();
-	
-	/**
-	 * Storage value for the skip song command.
-	 */
-	public static final String SKIP_CMD_KEY = SkipCommand.class.getName();
-	
-	/**
-	 * Storage value for the repeat/previous song command.
-	 */
-	public static final String PREVIOUS_CMD_KEY = PreviousCommand.class
-			.getName();
-
-	/**
-	 * Array of valid storage values for commands.
-	 */
-	public static final String[] CMD_KEYS = new String[] {
-
-	PLAYPAUSE_CMD_KEY, SKIP_CMD_KEY, PREVIOUS_CMD_KEY
-
-	};
-
-	/**
-	 * Map from command storage values to the call states in which the given
-	 * command can be appropriately invoked.
-	 */
-	public static final HashMap<String, int[]> VALID_CMD_STATES;
-	static {
-
-		VALID_CMD_STATES = new HashMap<String, int[]>();
-
-		// Play/pause command.
-		VALID_CMD_STATES.put(PLAYPAUSE_CMD_KEY,
-				new int[] { TelephonyManager.CALL_STATE_IDLE });
-
-		// Skip song command.
-		VALID_CMD_STATES.put(SKIP_CMD_KEY,
-				new int[] { TelephonyManager.CALL_STATE_IDLE });
-
-		// Repeat/Previous song command.
-		VALID_CMD_STATES.put(PREVIOUS_CMD_KEY,
-				new int[] { TelephonyManager.CALL_STATE_IDLE });
-	}
-
 	private SharedPreferences prefs;
+
+	/**
+	 * Reference to telephonyManager instance such that call state (i.e., if the
+	 * phone is ringing, if a call is ongoing, etc.) can be queried.
+	 */
 	private TelephonyManager telephonyManager;
 
 	/**
@@ -115,20 +49,50 @@ public class HCConfigAdapter {
 				.getSystemService(Context.TELEPHONY_SERVICE);
 	}
 
-	public void setStateCommand(String stateKey, String cmdKey, int callState) {
+	public void setStateCommand(String stateKey, String cmdKey, int callState)
+			throws Exception {
 
-		String cmds;
+		String[] cmds;
+		String cmdStr, newCmdStr;
+		int i;
 
 		// Ensure that given stateKey, cmdKey and callState are valid.
-		isValidStateKey(stateKey);
+		// TODO: throw better exception type, break into separate cases for more
+		// informative exception message.
+		if (!isValidStateKey(stateKey) || !isValidCommandKey(cmdKey, callState)) {
 
-		cmds = prefs.getString(stateKey, null);
-
-		if (cmds == null) {
-
-			//
+			throw new Exception("Invalid state or command key.");
 
 		}
+
+		cmdStr = prefs.getString(stateKey, null);
+
+		if (cmdStr == null) {
+
+			// No preferences thus far set for this command.
+			// TODO: can this happen/should this be allowed to happen?
+
+		}
+
+		cmds = cmdStr.split(COMMAND_DELIMITER);
+
+		// Construct the new string to be stored.
+		newCmdStr = "";
+		for (i = 0; i < N_CALL_STATES; i++) {
+
+			if (i != callState) {
+				newCmdStr += cmds[i];
+			} else {
+				newCmdStr += cmdKey;
+			}
+
+			if (i < N_CALL_STATES - 1) {
+				newCmdStr += COMMAND_DELIMITER;
+			}
+		}
+		
+		// Store and commit changes to shared preferences.
+		prefs.edit().putString(stateKey, newCmdStr).commit();
 
 	}
 
@@ -171,8 +135,17 @@ public class HCConfigAdapter {
 		return Arrays.asList(STATE_KEYS).contains(key);
 	}
 
-	private boolean isValidCommandKey(String key) {
-		return Arrays.asList(CMD_KEYS).contains(key);
+	private boolean isValidCommandKey(String key, int callState) {
+
+		// Ensure key is valid.
+		if (!Arrays.asList(CMD_KEYS).contains(key))
+			return false;
+
+		// Ensure that command can be invoked in the specified call state.
+		if (!Arrays.asList(VALID_CMD_STATES.get(key)).contains(callState))
+			return false;
+
+		return true;
 	}
 
 }
