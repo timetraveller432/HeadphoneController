@@ -186,6 +186,7 @@ public class HCConfigAdapter {
 		// Write default values for FourPressState.
 		cmdStr = MUTE_MUSIC_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY
 				+ COMMAND_DELIMITER + NO_OP_CMD_KEY;
+		edit.putString(FOUR_PRESS_STATE_KEY, cmdStr).commit();
 
 	}
 
