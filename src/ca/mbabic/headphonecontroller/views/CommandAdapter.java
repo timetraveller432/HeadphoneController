@@ -56,7 +56,7 @@ public class CommandAdapter extends ArrayAdapter<Command> {
 			@Override
 			public void onClick(View v) {
 //				setPositionSelected((int) v.getTag());
-				notifyDataSetInvalidated();
+//				notifyDataSetInvalidated();
 			}
 		});
 
