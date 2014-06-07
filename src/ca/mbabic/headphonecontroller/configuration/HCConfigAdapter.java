@@ -1,7 +1,22 @@
 package ca.mbabic.headphonecontroller.configuration;
 
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.*;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.CMD_KEYS;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.COMMAND_DELIMITER;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.FOUR_PRESS_STATE_KEY;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.HAS_RUN_BEFORE_KEY;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.MUTE_MUSIC_CMD_KEY;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.NO_OP_CMD_KEY;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.N_CALL_STATES;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.ONE_PRESS_STATE_KEY;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.PLAYPAUSE_CMD_KEY;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.PREVIOUS_CMD_KEY;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.SKIP_CMD_KEY;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.STATE_KEYS;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.THREE_PRESS_STATE_KEY;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.TWO_PRESS_STATE_KEY;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.VALID_CMD_STATES;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import android.content.Context;
@@ -12,6 +27,7 @@ import android.util.Log;
 import ca.mbabic.headphonecontroller.commands.HCCommand;
 import ca.mbabic.headphonecontroller.commands.HCCommandContext;
 import ca.mbabic.headphonecontroller.commands.HCCommandFactory;
+import ca.mbabic.headphonecontroller.models.State;
 
 /**
  * Defines methods allowing other classes access to configuration settings.
@@ -51,6 +67,13 @@ public class HCConfigAdapter {
 
 		telephonyManager = (TelephonyManager) cxt
 				.getSystemService(Context.TELEPHONY_SERVICE);
+	}
+	
+	/**
+	 * Get 
+	 */
+	public ArrayList<State> getStates() {
+		return null;
 	}
 
 	/**
