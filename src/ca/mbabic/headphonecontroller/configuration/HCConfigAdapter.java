@@ -27,6 +27,7 @@ import android.util.Log;
 import ca.mbabic.headphonecontroller.commands.HCCommand;
 import ca.mbabic.headphonecontroller.commands.HCCommandContext;
 import ca.mbabic.headphonecontroller.commands.HCCommandFactory;
+import ca.mbabic.headphonecontroller.models.Command;
 import ca.mbabic.headphonecontroller.models.State;
 
 /**
@@ -68,18 +69,95 @@ public class HCConfigAdapter {
 		telephonyManager = (TelephonyManager) cxt
 				.getSystemService(Context.TELEPHONY_SERVICE);
 	}
-	
+
 	/**
-	 * Get 
+	 * Get collection of state objects from configuration file.
 	 */
 	public ArrayList<State> getStates() {
-		return null;
+
+		ArrayList<State> ret;
+		String[] cmds;
+		State state;
+		Command idleCmd, offHookCmd, ringingCmd;
+		String stateKey, idleCmdKey, offHookCmdKey, ringingCmdKey, stateName, 
+		idleCmdName, offHookCmdName, ringingCmdName, cmdStr;
+		int i;
+
+		ret = new ArrayList<State>();		
+		
+		for (i = 0; i < STATE_KEYS.length; i++) {
+
+			stateKey = STATE_KEYS[i];
+
+			// TODO: factor this into own method and use in getStateCmd
+
+			cmdStr = prefs.getString(stateKey, "");
+			
+			cmds = cmdStr.split(COMMAND_DELIMITER);
+			
+			idleCmdKey 		= cmds[TelephonyManager.CALL_STATE_IDLE];
+			offHookCmdKey 	= cmds[TelephonyManager.CALL_STATE_OFFHOOK];
+			ringingCmdKey 	= cmds[TelephonyManager.CALL_STATE_RINGING];
+			
+			idleCmdName 	= HCConfigAdapter.keyToName(idleCmdKey);
+			offHookCmdName 	= HCConfigAdapter.keyToName(offHookCmdKey);
+			ringingCmdName 	= HCConfigAdapter.keyToName(ringingCmdKey);
+			
+			idleCmd 		= new Command(idleCmdKey, idleCmdName);
+			offHookCmd 		= new Command(offHookCmdKey, offHookCmdName);
+			ringingCmd 		= new Command(ringingCmdKey, ringingCmdName);
+			
+			stateName 		= HCConfigAdapter.keyToName(stateKey);
+			
+			state = new State(stateKey, stateName, idleCmd, offHookCmd, 
+					ringingCmd);
+			
+			ret.add(state);						
+		}
+		
+		return ret;
+	}
+
+	/**
+	 * Converts the given command or state key to a String representing the name
+	 * of that command or state.
+	 * 
+	 * @param key
+	 * 
+	 * @return
+	 */
+	public static String keyToName(String key) {
+
+		String[] splitKey;
+		String name, ret = "";
+		int i;
+		char c;
+
+		splitKey = key.split(".");
+
+		name = splitKey[splitKey.length - 1];
+
+		for (i = 0; i < name.length(); i++) {
+
+			c = name.charAt(i);
+
+			if (Character.isUpperCase(c) && i > 0) {
+
+				ret += " ";
+
+			}
+
+			ret += c;
+
+		}
+
+		return ret;
 	}
 
 	/**
 	 * 
 	 * Command string stored in format:
-	 * CMD_FOR_CALL_IDLE|CMD_FOR_CALL_RINGING|CMD_FOR_CALL_OFFHOOK
+	 * CMD_FOR_CALL_IDLE::CMD_FOR_CALL_RINGING::CMD_FOR_CALL_OFFHOOK
 	 * 
 	 * @param stateKey
 	 * @param cmdKey
@@ -153,14 +231,14 @@ public class HCConfigAdapter {
 		storedCmdStr = prefs.getString(state.getName(), null);
 
 		Log.d(TAG, "storedCmdStr = " + storedCmdStr);
-		
+
 		cmds = storedCmdStr.split(COMMAND_DELIMITER);
 
 		Log.d(TAG, "cmds[0], cmds[1], cmds[2] = " + cmds[0] + ", " + cmds[1]
 				+ ", " + cmds[2]);
 
 		cmdStr = cmds[telephonyManager.getCallState()];
-		
+
 		Log.d(TAG, "cmdStr = " + cmdStr);
 
 		try {
@@ -205,7 +283,7 @@ public class HCConfigAdapter {
 		cmdStr = PREVIOUS_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY
 				+ COMMAND_DELIMITER + NO_OP_CMD_KEY;
 		edit.putString(THREE_PRESS_STATE_KEY, cmdStr).commit();
-		
+
 		// Write default values for FourPressState.
 		cmdStr = MUTE_MUSIC_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY
 				+ COMMAND_DELIMITER + NO_OP_CMD_KEY;
