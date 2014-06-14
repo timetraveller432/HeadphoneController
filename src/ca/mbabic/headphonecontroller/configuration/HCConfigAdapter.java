@@ -123,8 +123,9 @@ public class HCConfigAdapter {
 	 * of that command or state.
 	 * 
 	 * @param key
-	 * 
+	 *  	The state key from which the state name is to be derived.
 	 * @return
+	 * 		The name of the state specified by the given key.
 	 */
 	public static String keyToName(String key) {
 
@@ -208,14 +209,17 @@ public class HCConfigAdapter {
 			}
 		}
 
-		// Store and commit changes to shared preferences.
+		// Store and commit changes to shared preferences object.
 		prefs.edit().putString(stateKey, newCmdStr).commit();
 
 	}
 
 	/**
-	 * Given a state class for which
-	 * 
+	 * Given a State class, constructs a HCCommandContext object from which
+	 * the appropriate command can be invoked.	 * 
+	 * TODO: should this really be the responsibility of HCConfigAdapter?
+	 * Consider refactoring so that HCConfigAdapter class does not need 
+	 * reference to TelephonyManager to view state.
 	 * @param state
 	 * @return
 	 */
