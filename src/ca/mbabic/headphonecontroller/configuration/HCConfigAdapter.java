@@ -70,17 +70,50 @@ public class HCConfigAdapter {
 				.getSystemService(Context.TELEPHONY_SERVICE);
 	}
 
+	
+	/**
+	 * Returns State object associated with the given state key or null if no
+	 * such object exists.
+	 * @param stateKey
+	 * 		The key of the state to be retrieved from configuration store.
+	 */
+	public State getState(String stateKey) {
+
+		String[] cmds;
+		Command idleCmd, offHookCmd, ringingCmd;
+		String idleCmdKey, offHookCmdKey, ringingCmdKey, stateName, 
+		idleCmdName, offHookCmdName, ringingCmdName, cmdStr;	
+		
+		if (!isValidStateKey(stateKey)) return null;
+		
+		cmdStr = prefs.getString(stateKey, "");
+		
+		cmds = cmdStr.split(COMMAND_DELIMITER);
+		
+		idleCmdKey 		= cmds[TelephonyManager.CALL_STATE_IDLE];
+		offHookCmdKey 	= cmds[TelephonyManager.CALL_STATE_OFFHOOK];
+		ringingCmdKey 	= cmds[TelephonyManager.CALL_STATE_RINGING];
+		
+		idleCmdName 	= HCConfigAdapter.keyToName(idleCmdKey);
+		offHookCmdName 	= HCConfigAdapter.keyToName(offHookCmdKey);
+		ringingCmdName 	= HCConfigAdapter.keyToName(ringingCmdKey);
+		
+		idleCmd 		= new Command(idleCmdKey, idleCmdName);
+		offHookCmd 		= new Command(offHookCmdKey, offHookCmdName);
+		ringingCmd 		= new Command(ringingCmdKey, ringingCmdName);
+		
+		stateName 		= HCConfigAdapter.keyToName(stateKey);
+		
+		return new State(stateKey, stateName, idleCmd, offHookCmd, ringingCmd);
+	}
+	
 	/**
 	 * Get collection of state objects from configuration file.
 	 */
 	public ArrayList<State> getStates() {
 
 		ArrayList<State> ret;
-		String[] cmds;
-		State state;
-		Command idleCmd, offHookCmd, ringingCmd;
-		String stateKey, idleCmdKey, offHookCmdKey, ringingCmdKey, stateName, 
-		idleCmdName, offHookCmdName, ringingCmdName, cmdStr;
+		String stateKey;
 		int i;
 
 		ret = new ArrayList<State>();		
@@ -88,31 +121,8 @@ public class HCConfigAdapter {
 		for (i = 0; i < STATE_KEYS.length; i++) {
 
 			stateKey = STATE_KEYS[i];
-
-			// TODO: factor this into own method and use in getStateCmd
-
-			cmdStr = prefs.getString(stateKey, "");
 			
-			cmds = cmdStr.split(COMMAND_DELIMITER);
-			
-			idleCmdKey 		= cmds[TelephonyManager.CALL_STATE_IDLE];
-			offHookCmdKey 	= cmds[TelephonyManager.CALL_STATE_OFFHOOK];
-			ringingCmdKey 	= cmds[TelephonyManager.CALL_STATE_RINGING];
-			
-			idleCmdName 	= HCConfigAdapter.keyToName(idleCmdKey);
-			offHookCmdName 	= HCConfigAdapter.keyToName(offHookCmdKey);
-			ringingCmdName 	= HCConfigAdapter.keyToName(ringingCmdKey);
-			
-			idleCmd 		= new Command(idleCmdKey, idleCmdName);
-			offHookCmd 		= new Command(offHookCmdKey, offHookCmdName);
-			ringingCmd 		= new Command(ringingCmdKey, ringingCmdName);
-			
-			stateName 		= HCConfigAdapter.keyToName(stateKey);
-			
-			state = new State(stateKey, stateName, idleCmd, offHookCmd, 
-					ringingCmd);
-			
-			ret.add(state);						
+			ret.add(getState(stateKey));						
 		}
 		
 		return ret;
@@ -141,15 +151,12 @@ public class HCConfigAdapter {
 		for (i = 0; i < name.length(); i++) {
 
 			c = name.charAt(i);
-
+			
 			if (Character.isUpperCase(c) && i > 0) {
-
 				ret += " ";
-
 			}
-
+			
 			ret += c;
-
 		}
 
 		return ret;

@@ -20,14 +20,14 @@ import ca.mbabic.headphonecontroller.models.Command;
  */
 public class CommandAdapter extends ArrayAdapter<Command> {
 
-	private ArrayList<Command> objs;
-	private Context cxt;
+	private ArrayList<Command> mObjs;
+	private Context mCxt;
 
 	public CommandAdapter(Context context, int textViewResourceId,
 			ArrayList<Command> objects) {
 		super(context, textViewResourceId, objects);
-		objs = objects;
-		cxt = context;
+		mObjs = objects;
+		mCxt = context;
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class CommandAdapter extends ArrayAdapter<Command> {
 
 		if (view == null) {
 
-			viewInflater = (LayoutInflater) cxt
+			viewInflater = (LayoutInflater) mCxt
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 			view = viewInflater
@@ -50,7 +50,7 @@ public class CommandAdapter extends ArrayAdapter<Command> {
 
 		}
 
-		cmd = objs.get(position);
+		cmd = mObjs.get(position);
 
 		textView = (TextView) view.findViewById(R.id.command_selection_label);
 
