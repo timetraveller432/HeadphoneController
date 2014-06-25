@@ -12,6 +12,12 @@ import android.widget.TextView;
 import ca.mbabic.headphonecontroller.R;
 import ca.mbabic.headphonecontroller.models.Command;
 
+/**
+ * Array adapter for the display of HCCommands in a view.
+ * 
+ * @author Marko Babic
+ * 
+ */
 public class CommandAdapter extends ArrayAdapter<Command> {
 
 	private ArrayList<Command> objs;
@@ -29,8 +35,8 @@ public class CommandAdapter extends ArrayAdapter<Command> {
 
 		LayoutInflater viewInflater;
 		TextView textView;
-		RadioButton radioButton;
 		View view;
+		Command cmd;
 
 		view = convertView;
 
@@ -44,21 +50,11 @@ public class CommandAdapter extends ArrayAdapter<Command> {
 
 		}
 
-		radioButton = (RadioButton) view
-				.findViewById(R.id.command_selection_button);
+		cmd = objs.get(position);
 
 		textView = (TextView) view.findViewById(R.id.command_selection_label);
 
-//		radioButton.setChecked(position == mPositionSelected);
-		radioButton.setTag(position);
-		radioButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-//				setPositionSelected((int) v.getTag());
-//				notifyDataSetInvalidated();
-			}
-		});
+		textView.setText(cmd.getName());
 
 		return view;
 	}
