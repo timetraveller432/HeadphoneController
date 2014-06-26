@@ -1,5 +1,6 @@
 package ca.mbabic.headphonecontroller.configuration;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import android.telephony.TelephonyManager;
@@ -19,7 +20,8 @@ public class HCConfigConstants {
 	 * Storage key for boolean value indicating whether the application has run
 	 * before or not.
 	 */
-	public static final String HAS_RUN_BEFORE_KEY = "ca.mbabic.headphonecontroller.configuration.HAS_RUN_BEFORE";
+	public static final String HAS_RUN_BEFORE_KEY = 
+			"ca.mbabic.headphonecontroller.configuration.HAS_RUN_BEFORE";
 
 	/**
 	 * Storage key for the OnePress state.
@@ -85,13 +87,18 @@ public class HCConfigConstants {
 			.getName();
 
 	/**
-	 * Array of valid storage values for commands.
+	 * Array of valid storage values for commands.  Keys are sorted such that
+	 * a binary serach can be performed on the array to search for a value.
 	 */
 	public static final String[] CMD_KEYS = new String[] {
 
-	PLAYPAUSE_CMD_KEY, SKIP_CMD_KEY, PREVIOUS_CMD_KEY
+	PLAYPAUSE_CMD_KEY, SKIP_CMD_KEY, PREVIOUS_CMD_KEY, MUTE_MUSIC_CMD_KEY
 
 	};
+	// Sort CMD_KEYS to allows for binary searches.
+	static {
+		Arrays.sort(CMD_KEYS);
+	}
 
 	/**
 	 * Number of possible call states.
@@ -137,4 +144,6 @@ public class HCConfigConstants {
 
 		// ...
 	}
+	
+	
 }

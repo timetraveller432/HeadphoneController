@@ -1,20 +1,6 @@
 package ca.mbabic.headphonecontroller.configuration;
 
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.CMD_KEYS;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.COMMAND_DELIMITER;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.FOUR_PRESS_STATE_KEY;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.HAS_RUN_BEFORE_KEY;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.MUTE_MUSIC_CMD_KEY;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.NO_OP_CMD_KEY;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.N_CALL_STATES;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.ONE_PRESS_STATE_KEY;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.PLAYPAUSE_CMD_KEY;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.PREVIOUS_CMD_KEY;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.SKIP_CMD_KEY;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.STATE_KEYS;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.THREE_PRESS_STATE_KEY;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.TWO_PRESS_STATE_KEY;
-import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.VALID_CMD_STATES;
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,6 +113,42 @@ public class HCConfigAdapter {
 		
 		return ret;
 	}
+	
+	/**
+	 * Get collection of all possible commands from the configuration file
+	 * by call state.
+	 * 
+	 * @param callState
+	 * 		The call state for which all possible commands are to be retrieved.
+	 * @return
+	 * 		ArrayList of command objects.
+	 * @throws Exception
+	 * 		Throws exception if given invalid call state.
+	 */
+	public ArrayList<Command> getCommands(int callState) throws Exception {
+		
+		ArrayList<Command> ret;
+		
+		if (!isValidCallState(callState)) {
+			throw new Exception("Invalid call state value.");
+		}
+		
+		ret = new ArrayList<Command>();
+		
+		for (String cmdKey : CMD_KEYS) {
+			
+			// Search for callState in validCallStates -- if it is in there,
+			// then we construct a new command object and add it to the array
+			// to be returned.  isValidCommandKey() does this work for us.
+			if (isValidCommandKey(cmdKey, callState)) {
+				
+				ret.add(new Command(cmdKey, keyToName(cmdKey)));
+				
+			}	
+		}
+		
+		return ret;
+	}
 
 	/**
 	 * Converts the given command or state key to a String representing the name
@@ -164,13 +186,21 @@ public class HCConfigAdapter {
 
 	/**
 	 * 
+	 * Set the command to be executed in the given HCStateMachine state 
+	 * in the given call state.
+	 * 
 	 * Command string stored in format:
 	 * CMD_FOR_CALL_IDLE::CMD_FOR_CALL_RINGING::CMD_FOR_CALL_OFFHOOK
 	 * 
 	 * @param stateKey
+	 * 		The key of the HCStateMachine state in which the command is to
+	 * 		executed.
 	 * @param cmdKey
+	 * 		The key of the command to be executed.
 	 * @param callState
+	 * 		The call state to which the command applies.
 	 * @throws Exception
+	 *		Throws exception if passed invalid state or command key.
 	 */
 	public void setStateCommand(String stateKey, String cmdKey, int callState)
 			throws Exception {
@@ -344,13 +374,33 @@ public class HCConfigAdapter {
 	private boolean isValidCommandKey(String key, int callState) {
 
 		// Ensure key is valid.
-		if (!Arrays.asList(CMD_KEYS).contains(key))
+		if (Arrays.binarySearch(CMD_KEYS, key) == -1)
 			return false;
 
 		// Ensure that command can be invoked in the specified call state.
-		if (!Arrays.asList(VALID_CMD_STATES.get(key)).contains(callState))
+		Arrays.sort(VALID_CMD_STATES.get(key));
+		if (Arrays.binarySearch(VALID_CMD_STATES.get(key), callState) == -1)
 			return false;
 
+		return true;
+	}
+	
+	/**
+	 * Determines if the given callState is of a valid value.
+	 * @param callState
+	 * 		The call state whose validity is to be determined.
+	 * @return
+	 * 		True if the call state is valid, false otherwise.
+	 */
+	private boolean isValidCallState(int callState) {
+		if 	(	
+				callState != TelephonyManager.CALL_STATE_IDLE 		&&
+				callState != TelephonyManager.CALL_STATE_OFFHOOK	&&
+				callState != TelephonyManager.CALL_STATE_RINGING
+		) {
+			return false;
+		}
+		
 		return true;
 	}
 
