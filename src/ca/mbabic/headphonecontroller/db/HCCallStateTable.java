@@ -15,7 +15,7 @@ public class HCCallStateTable extends HCDbTable {
 		TABLE_NAME = "CALLSTATE";
 		PRIMARY_KEY_NAME = "id";
 		CREATION_STMT = 
-			"CREATE TABLE CALLSTATE(" 			+
+			"CREATE TABLE " + TABLE_NAME + "(" 	+
 				"id int PRIMARY KEY NOT NULL, " +
 				"name text NOT NULL" 			+
 			");";

@@ -12,7 +12,7 @@ public class HCCommandTable extends HCDbTable {
 		TABLE_NAME = "COMMAND";
 		PRIMARY_KEY_NAME = "id";
 		CREATION_STMT =
-			"CREATE TABLE COMMAND(" 			+
+			"CREATE TABLE " + TABLE_NAME + "(" 	+
 				"id int PRIMARY KEY NOT NULL, " +
 				"key text NOT NULL, "			+
 				"name text NOT NULL"			+
