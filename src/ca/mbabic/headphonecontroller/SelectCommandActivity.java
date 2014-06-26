@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import ca.mbabic.headphonecontroller.configuration.HCConfigAdapter;
-import ca.mbabic.headphonecontroller.models.State;
+import ca.mbabic.headphonecontroller.models.HCInputSequence;
 import ca.mbabic.headphonecontroller.views.CommandAdapter;
 
 public class SelectCommandActivity extends ListActivity {
@@ -20,7 +20,7 @@ public class SelectCommandActivity extends ListActivity {
 	};
 
 	private String mInputSequence;
-	private State mState;
+	private HCInputSequence mState;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

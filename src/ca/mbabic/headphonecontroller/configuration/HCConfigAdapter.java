@@ -13,8 +13,8 @@ import android.util.Log;
 import ca.mbabic.headphonecontroller.commands.HCCommand;
 import ca.mbabic.headphonecontroller.commands.HCCommandContext;
 import ca.mbabic.headphonecontroller.commands.HCCommandFactory;
-import ca.mbabic.headphonecontroller.models.Command;
-import ca.mbabic.headphonecontroller.models.State;
+import ca.mbabic.headphonecontroller.models.HCCmd;
+import ca.mbabic.headphonecontroller.models.HCInputSequence;
 
 /**
  * Defines methods allowing other classes access to configuration settings.
@@ -63,10 +63,10 @@ public class HCConfigAdapter {
 	 * @param stateKey
 	 * 		The key of the state to be retrieved from configuration store.
 	 */
-	public State getState(String stateKey) {
+	public HCInputSequence getState(String stateKey) {
 
 		String[] cmds;
-		Command idleCmd, offHookCmd, ringingCmd;
+		HCCmd idleCmd, offHookCmd, ringingCmd;
 		String idleCmdKey, offHookCmdKey, ringingCmdKey, stateName, 
 		idleCmdName, offHookCmdName, ringingCmdName, cmdStr;	
 		
@@ -84,25 +84,25 @@ public class HCConfigAdapter {
 		offHookCmdName 	= HCConfigAdapter.keyToName(offHookCmdKey);
 		ringingCmdName 	= HCConfigAdapter.keyToName(ringingCmdKey);
 		
-		idleCmd 		= new Command(idleCmdKey, idleCmdName);
-		offHookCmd 		= new Command(offHookCmdKey, offHookCmdName);
-		ringingCmd 		= new Command(ringingCmdKey, ringingCmdName);
+		idleCmd 		= new HCCmd(idleCmdKey, idleCmdName);
+		offHookCmd 		= new HCCmd(offHookCmdKey, offHookCmdName);
+		ringingCmd 		= new HCCmd(ringingCmdKey, ringingCmdName);
 		
 		stateName 		= HCConfigAdapter.keyToName(stateKey);
 		
-		return new State(stateKey, stateName, idleCmd, offHookCmd, ringingCmd);
+		return new HCInputSequence(stateKey, stateName, idleCmd, offHookCmd, ringingCmd);
 	}
 	
 	/**
 	 * Get collection of state objects from configuration file.
 	 */
-	public ArrayList<State> getStates() {
+	public ArrayList<HCInputSequence> getStates() {
 
-		ArrayList<State> ret;
+		ArrayList<HCInputSequence> ret;
 		String stateKey;
 		int i;
 
-		ret = new ArrayList<State>();		
+		ret = new ArrayList<HCInputSequence>();		
 		
 		for (i = 0; i < STATE_KEYS.length; i++) {
 
@@ -125,15 +125,15 @@ public class HCConfigAdapter {
 	 * @throws Exception
 	 * 		Throws exception if given invalid call state.
 	 */
-	public ArrayList<Command> getCommands(int callState) throws Exception {
+	public ArrayList<HCCmd> getCommands(int callState) throws Exception {
 		
-		ArrayList<Command> ret;
+		ArrayList<HCCmd> ret;
 		
 		if (!isValidCallState(callState)) {
 			throw new Exception("Invalid call state value.");
 		}
 		
-		ret = new ArrayList<Command>();
+		ret = new ArrayList<HCCmd>();
 		
 		for (String cmdKey : CMD_KEYS) {
 			
@@ -142,7 +142,7 @@ public class HCConfigAdapter {
 			// to be returned.  isValidCommandKey() does this work for us.
 			if (isValidCommandKey(cmdKey, callState)) {
 				
-				ret.add(new Command(cmdKey, keyToName(cmdKey)));
+				ret.add(new HCCmd(cmdKey, keyToName(cmdKey)));
 				
 			}	
 		}

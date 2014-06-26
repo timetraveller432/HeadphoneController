@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import ca.mbabic.headphonecontroller.R;
-import ca.mbabic.headphonecontroller.models.Command;
+import ca.mbabic.headphonecontroller.models.HCCmd;
 
 /**
  * Array adapter for the display of HCCommands in a view.
@@ -18,13 +18,13 @@ import ca.mbabic.headphonecontroller.models.Command;
  * @author Marko Babic
  * 
  */
-public class CommandAdapter extends ArrayAdapter<Command> {
+public class CommandAdapter extends ArrayAdapter<HCCmd> {
 
-	private ArrayList<Command> mObjs;
+	private ArrayList<HCCmd> mObjs;
 	private Context mCxt;
 
 	public CommandAdapter(Context context, int textViewResourceId,
-			ArrayList<Command> objects) {
+			ArrayList<HCCmd> objects) {
 		super(context, textViewResourceId, objects);
 		mObjs = objects;
 		mCxt = context;
@@ -36,7 +36,7 @@ public class CommandAdapter extends ArrayAdapter<Command> {
 		LayoutInflater viewInflater;
 		TextView textView;
 		View view;
-		Command cmd;
+		HCCmd cmd;
 
 		view = convertView;
 
