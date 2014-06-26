@@ -11,30 +11,44 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public abstract class HCDbTable {
 	
+	
+	protected String TABLE_NAME;
+	protected String CREATION_STMT;
+	protected String PRIMARY_KEY_NAME;
+	
+	
+	public void onCreate(SQLiteDatabase db) {
+		db.execSQL(getCreationStatement());
+	}
+		
 	/**
 	 * @return 
 	 * 		ArrayList of ContentValues objects -- each object encoding
 	 * 		the default values 
-	 */
+	 */	
 	public abstract ArrayList<ContentValues> getDefaultValues();
-	
 	/**
 	 * @return
 	 * 		The name of the table.
 	 */
-	public abstract String getTableName();
-	
+	public String getTableName() {
+		return TABLE_NAME;
+	}
+
 	/**
 	 * @return
 	 * 		The SQL statement which creates the table.
 	 */
-	public abstract String getCreationStatement();
-	
+	public String getCreationStatement() {
+		return CREATION_STMT;
+	}
+
 	/**
 	 * @return
 	 * 		The name of the column which serves as the primary key for the 
 	 * 		table.
 	 */
-	public abstract String getPrimaryKeyColumnName();
-	
+	public String getPrimaryKeyColumnName() {
+		return PRIMARY_KEY_NAME;
+	}
 }

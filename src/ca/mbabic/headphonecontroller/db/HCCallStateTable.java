@@ -3,19 +3,21 @@ package ca.mbabic.headphonecontroller.db;
 import java.util.ArrayList;
 
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 
-public class HCCommandTable extends HCDbTable {		
+/**
+ * Table storing possible call states.
+ * @author Marko Babic
+ *
+ */
+public class HCCallStateTable extends HCDbTable {
 	
-	public HCCommandTable() {
-		
-		TABLE_NAME = "COMMAND";
+	public HCCallStateTable() {
+		TABLE_NAME = "CALLSTATE";
 		PRIMARY_KEY_NAME = "id";
-		CREATION_STMT =
-			"CREATE TABLE COMMAND(" 			+
+		CREATION_STMT = 
+			"CREATE TABLE CALLSTATE(" 			+
 				"id int PRIMARY KEY NOT NULL, " +
-				"key text NOT NULL, "			+
-				"name text NOT NULL"			+
+				"name text NOT NULL" 			+
 			");";
 	}
 
@@ -24,4 +26,7 @@ public class HCCommandTable extends HCDbTable {
 		return null;
 	}
 
+
+	
+	
 }
