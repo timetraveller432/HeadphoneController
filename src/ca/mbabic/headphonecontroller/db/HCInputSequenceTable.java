@@ -14,8 +14,7 @@ public class HCInputSequenceTable extends HCDbTable {
 		
 		CREATION_STMT = 			
 			"CREATE TABLE " + TABLE_NAME + "(" 		+
-				"id int PRIMARY KEY NOT NULL, " 	+
-				"key text NOT NULL, " 				+
+				"key text PRIMARY KEY NOT NULL, " 	+
 				"name text NOT NULL" 				+
 			");";
 	

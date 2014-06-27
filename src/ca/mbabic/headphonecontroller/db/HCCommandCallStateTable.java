@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 
+/**
+ * Table storing the call states in which a command can be executed.
+ * @author Marko Babic
+ */
 public class HCCommandCallStateTable extends HCDbTable {
 
 	public HCCommandCallStateTable() {
@@ -12,11 +16,11 @@ public class HCCommandCallStateTable extends HCDbTable {
 		
 		PRIMARY_KEY_NAME = "";
 		
-		CREATION_STMT = "CREATE TABLE " + TABLE_NAME + "("  		+
-				"command_id int, " 									+
-				"callstate_id int, " 								+
-				"FOREIGN KEY (command_id) REFERENCES COMMAND(id), "	+
-				"FOREIGN KEY (callstate_id) REFERENCE CALLSTATE(id)"+
+		CREATION_STMT = "CREATE TABLE " + TABLE_NAME + "("  			+
+				"command_key text, " 									+
+				"callstate_key text, " 									+
+				"FOREIGN KEY (command_key) REFERENCES COMMAND(key), "	+
+				"FOREIGN KEY (callstate_key) REFERENCE CALLSTATE(key)"	+
 			");";
 	
 	}

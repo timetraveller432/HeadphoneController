@@ -10,11 +10,10 @@ public class HCCommandTable extends HCDbTable {
 	public HCCommandTable() {
 		
 		TABLE_NAME = "COMMAND";
-		PRIMARY_KEY_NAME = "id";
+		PRIMARY_KEY_NAME = "key";
 		CREATION_STMT =
 			"CREATE TABLE " + TABLE_NAME + "(" 	+
-				"id int PRIMARY KEY NOT NULL, " +
-				"key text NOT NULL, "			+
+				"key text PRIMARY KEY NOT NULL, " +
 				"name text NOT NULL"			+
 			");";
 	}

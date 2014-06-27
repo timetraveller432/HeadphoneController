@@ -13,11 +13,11 @@ public class HCCallStateTable extends HCDbTable {
 	
 	public HCCallStateTable() {
 		TABLE_NAME = "CALLSTATE";
-		PRIMARY_KEY_NAME = "id";
+		PRIMARY_KEY_NAME = "key";
 		CREATION_STMT = 
 			"CREATE TABLE " + TABLE_NAME + "(" 	+
-				"id int PRIMARY KEY NOT NULL, " +
-				"name text NOT NULL" 			+
+				"key text PRIMARY KEY NOT NULL, " +
+				"display_name text NOT NULL" 	+
 			");";
 	}
 
