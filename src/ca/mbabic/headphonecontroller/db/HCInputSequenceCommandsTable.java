@@ -2,6 +2,8 @@ package ca.mbabic.headphonecontroller.db;
 
 import java.util.ArrayList;
 
+import static ca.mbabic.headphonecontroller.configuration.HCConfigConstants.*;
+
 import android.content.ContentValues;
 
 public class HCInputSequenceCommandsTable extends HCDbTable {
@@ -46,10 +48,28 @@ public class HCInputSequenceCommandsTable extends HCDbTable {
 
 		ArrayList<ContentValues> ret;
 		ContentValues cv;
+		String[] cmds;
 		
 		ret = new ArrayList<ContentValues>();
 		
-		
+		for (String seqKey : INPUTSEQUENCE_KEYS) {
+			
+			cmds = DEFAULT_CONFIGURATION.get(seqKey);
+			
+			for (int callstateId : CALL_STATE_KEYS) {
+				
+				cv = new ContentValues();
+				
+				cv.put(INPUTSEQUENCE_KEY, seqKey);
+				
+				cv.put(COMMAND_KEY, cmds[callstateId % N_CALL_STATES]);
+				
+				cv.put(CALLSTATE_ID, callstateId);
+				
+				ret.add(cv);
+			}
+			
+		}
 		
 		return ret;
 	
