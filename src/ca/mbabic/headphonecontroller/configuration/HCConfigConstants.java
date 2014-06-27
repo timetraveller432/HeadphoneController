@@ -26,24 +26,25 @@ public class HCConfigConstants {
 	/**
 	 * Storage key for the OnePress state.
 	 */
-	public static final String ONE_PRESS_STATE_KEY = OnePressState.class
+	public static final String ONE_PRESS_KEY = OnePressState.class
 			.getName();
 
+	
 	/**
 	 * Storage key for the TwoPress state.
 	 */
-	public static final String TWO_PRESS_STATE_KEY = TwoPressState.class
+	public static final String TWO_PRESS_KEY = TwoPressState.class
 			.getName();
 	/**
 	 * Storage key for the ThreePress state.
 	 */
-	public static final String THREE_PRESS_STATE_KEY = ThreePressState.class
+	public static final String THREE_PRESS_KEY = ThreePressState.class
 			.getName();
 
 	/**
 	 * Storage key for the FourPress state.
 	 */
-	public static final String FOUR_PRESS_STATE_KEY = FourPressState.class
+	public static final String FOUR_PRESS_KEY = FourPressState.class
 			.getName();
 
 	/**
@@ -51,8 +52,8 @@ public class HCConfigConstants {
 	 */
 	public static final String[] STATE_KEYS = new String[] {
 
-	ONE_PRESS_STATE_KEY, TWO_PRESS_STATE_KEY, THREE_PRESS_STATE_KEY,
-			FOUR_PRESS_STATE_KEY
+	ONE_PRESS_KEY, TWO_PRESS_KEY, THREE_PRESS_KEY,
+			FOUR_PRESS_KEY
 
 	};
 
@@ -104,6 +105,13 @@ public class HCConfigConstants {
 	 * Number of possible call states.
 	 */
 	public static final int N_CALL_STATES = 3;
+	
+	public static final int[] CALL_STATE_KEYS = {
+		
+		TelephonyManager.CALL_STATE_IDLE, TelephonyManager.CALL_STATE_OFFHOOK,
+		TelephonyManager.CALL_STATE_RINGING
+		
+	};
 
 	/**
 	 * Map from command storage values to the call states in which the given
@@ -144,6 +152,79 @@ public class HCConfigConstants {
 
 		// ...
 	}
+	
+	/**
+	 * Display name for command.  Map is from command key => command display 
+	 * string.
+	 */
+	public static final HashMap<String, String> CMD_DISPLAY_NAMES;
+	static {
+		
+		CMD_DISPLAY_NAMES = new HashMap<String, String>();
+		
+		// No-op command.
+		CMD_DISPLAY_NAMES.put(NO_OP_CMD_KEY, "Perform no action");
+		
+		// Play/Pause command.
+		CMD_DISPLAY_NAMES.put(PLAYPAUSE_CMD_KEY, "Play/Pause");
+		
+		// Skip song command.
+		CMD_DISPLAY_NAMES.put(SKIP_CMD_KEY, "Skip track");
+		
+		// Repeat/Previous song command.
+		CMD_DISPLAY_NAMES.put(PREVIOUS_CMD_KEY, "Repeat/Go to previous track");
+		
+		// Mute music command.
+		CMD_DISPLAY_NAMES.put(MUTE_MUSIC_CMD_KEY, "Mute");
+		
+		
+	}
+	
+	/**
+	 * Display names for input sequences.  Map is from input sequence key =>
+	 * input sequence display string.
+	 */
+	public static final HashMap<String, String> INPUTSEQUENCE_DISPLAY_NAMES;
+	static {
+		
+		INPUTSEQUENCE_DISPLAY_NAMES = new HashMap<String, String>();
+		
+		// One press.
+		INPUTSEQUENCE_DISPLAY_NAMES.put(ONE_PRESS_KEY, "Single click.");
+		
+		// Two press.
+		INPUTSEQUENCE_DISPLAY_NAMES.put(TWO_PRESS_KEY, "Double click.");
+		
+		// Three press.
+		
+		INPUTSEQUENCE_DISPLAY_NAMES.put(THREE_PRESS_KEY, "Triple click.");
+		
+		// Four press.
+		INPUTSEQUENCE_DISPLAY_NAMES.put(FOUR_PRESS_KEY, "Quadruple click.");
+		
+	}
+	
+	/**
+	 * Display names for call states.  Map is from call state id => call state
+	 * display string.
+	 */
+	public static final HashMap<Integer, String> CALLSTATES_DISPLAY_NAMES;
+	static {
+		
+		CALLSTATES_DISPLAY_NAMES = new HashMap<Integer, String>();
+		
+		CALLSTATES_DISPLAY_NAMES.put(TelephonyManager.CALL_STATE_IDLE, 
+				"No call is active.");
+		
+		CALLSTATES_DISPLAY_NAMES.put(TelephonyManager.CALL_STATE_OFFHOOK, 
+				"A call is in progress.");
+		
+		CALLSTATES_DISPLAY_NAMES.put(TelephonyManager.CALL_STATE_RINGING, 
+				"The phone is ringing.");
+		
+	}
+	
+	
 	
 	
 }

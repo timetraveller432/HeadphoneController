@@ -16,10 +16,10 @@ public class HCInputSequenceCommandsTable extends HCDbTable {
 			"CREATE TABLE " + TABLE_NAME + "(" 		+
 				"inputsequence_key text, " 			+
 				"command_key text, " 				+
-				"callstate_key text, " 				+
+				"callstate_id int, " 				+
 				"FOREIGN KEY (inputsequence_key) REFERENCES INPUTSEQUENCE(key), " +
 				"FOREIGN KEY (command_key) REFERENCES COMMAND(key), " +
-				"FOREIGN KEY (callstate_key) REFERENCES CALLSTATE(key)" +
+				"FOREIGN KEY (callstate_id) REFERENCES CALLSTATE(id)" +
 			");";
 		
 	}

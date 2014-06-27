@@ -18,9 +18,9 @@ public class HCCommandCallStateTable extends HCDbTable {
 		
 		CREATION_STMT = "CREATE TABLE " + TABLE_NAME + "("  			+
 				"command_key text, " 									+
-				"callstate_key text, " 									+
+				"callstate_id int, " 									+
 				"FOREIGN KEY (command_key) REFERENCES COMMAND(key), "	+
-				"FOREIGN KEY (callstate_key) REFERENCE CALLSTATE(key)"	+
+				"FOREIGN KEY (callstate_id) REFERENCE CALLSTATE(id)"	+
 			");";
 	
 	}

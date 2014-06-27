@@ -10,7 +10,7 @@ public class HCInputSequenceTable extends HCDbTable {
 		
 		TABLE_NAME = "INPUTSEQUENCE";
 		
-		PRIMARY_KEY_NAME = "id";
+		PRIMARY_KEY_NAME = "key";
 		
 		CREATION_STMT = 			
 			"CREATE TABLE " + TABLE_NAME + "(" 		+

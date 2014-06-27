@@ -313,22 +313,22 @@ public class HCConfigAdapter {
 		// Write default values for OnePressState.
 		cmdStr = PLAYPAUSE_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY
 				+ COMMAND_DELIMITER + NO_OP_CMD_KEY;
-		edit.putString(ONE_PRESS_STATE_KEY, cmdStr).commit();
+		edit.putString(ONE_PRESS_KEY, cmdStr).commit();
 
 		// Write default values for TwoPressState.
 		cmdStr = SKIP_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY
 				+ COMMAND_DELIMITER + NO_OP_CMD_KEY;
-		edit.putString(TWO_PRESS_STATE_KEY, cmdStr).commit();
+		edit.putString(TWO_PRESS_KEY, cmdStr).commit();
 
 		// Write default values for ThreePressState.
 		cmdStr = PREVIOUS_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY
 				+ COMMAND_DELIMITER + NO_OP_CMD_KEY;
-		edit.putString(THREE_PRESS_STATE_KEY, cmdStr).commit();
+		edit.putString(THREE_PRESS_KEY, cmdStr).commit();
 
 		// Write default values for FourPressState.
 		cmdStr = MUTE_MUSIC_CMD_KEY + COMMAND_DELIMITER + NO_OP_CMD_KEY
 				+ COMMAND_DELIMITER + NO_OP_CMD_KEY;
-		edit.putString(FOUR_PRESS_STATE_KEY, cmdStr).commit();
+		edit.putString(FOUR_PRESS_KEY, cmdStr).commit();
 
 	}
 

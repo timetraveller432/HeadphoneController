@@ -20,6 +20,13 @@ public class HCCommandTable extends HCDbTable {
 
 	@Override
 	public ArrayList<ContentValues> getDefaultValues() {
+
+		ArrayList<ContentValues> ret;
+		ContentValues cv;
+		
+		// 
+		cv = new ContentValues();
+		
 		return null;
 	}
 
