@@ -104,9 +104,9 @@ public class HCConfigAdapter {
 
 		ret = new ArrayList<HCInputSequence>();		
 		
-		for (i = 0; i < STATE_KEYS.length; i++) {
+		for (i = 0; i < INPUTSEQUENCE_KEYS.length; i++) {
 
-			stateKey = STATE_KEYS[i];
+			stateKey = INPUTSEQUENCE_KEYS[i];
 			
 			ret.add(getState(stateKey));						
 		}
@@ -357,7 +357,7 @@ public class HCConfigAdapter {
 	 * @return True if valid, false otherwise.
 	 */
 	private boolean isValidStateKey(String key) {
-		return Arrays.asList(STATE_KEYS).contains(key);
+		return Arrays.asList(INPUTSEQUENCE_KEYS).contains(key);
 	}
 
 	/**

@@ -50,7 +50,7 @@ public class HCConfigConstants {
 	/**
 	 * Array of valid state storage keys.
 	 */
-	public static final String[] STATE_KEYS = new String[] {
+	public static final String[] INPUTSEQUENCE_KEYS = new String[] {
 
 	ONE_PRESS_KEY, TWO_PRESS_KEY, THREE_PRESS_KEY,
 			FOUR_PRESS_KEY
