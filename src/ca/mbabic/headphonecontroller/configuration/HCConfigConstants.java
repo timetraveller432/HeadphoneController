@@ -106,7 +106,7 @@ public class HCConfigConstants {
 	 */
 	public static final int N_CALL_STATES = 3;
 	
-	public static final int[] CALL_STATE_KEYS = {
+	public static final int[] CALL_STATE_KEYS = new int[] {
 		
 		TelephonyManager.CALL_STATE_IDLE, TelephonyManager.CALL_STATE_OFFHOOK,
 		TelephonyManager.CALL_STATE_RINGING
@@ -224,7 +224,70 @@ public class HCConfigConstants {
 		
 	}
 	
-	
+	public static final HashMap<String, String[]> DEFAULT_CONFIGURATION;
+	static {
+		
+		String[] cmdsByState;
+				
+		DEFAULT_CONFIGURATION = new HashMap<String, String[]>();
+		
+		// One press default configuration.
+		cmdsByState	= new String[N_CALL_STATES];
+
+		cmdsByState[TelephonyManager.CALL_STATE_IDLE % N_CALL_STATES] =
+			PLAYPAUSE_CMD_KEY;
+		
+		cmdsByState[TelephonyManager.CALL_STATE_OFFHOOK % N_CALL_STATES] =
+				NO_OP_CMD_KEY;
+		
+		cmdsByState[TelephonyManager.CALL_STATE_RINGING % N_CALL_STATES] =
+				NO_OP_CMD_KEY;
+		
+		DEFAULT_CONFIGURATION.put(ONE_PRESS_KEY, cmdsByState);
+		
+		// Two press default configuration
+		cmdsByState	= new String[N_CALL_STATES];
+
+		cmdsByState[TelephonyManager.CALL_STATE_IDLE % N_CALL_STATES] =
+			SKIP_CMD_KEY;
+		
+		cmdsByState[TelephonyManager.CALL_STATE_OFFHOOK % N_CALL_STATES] =
+				NO_OP_CMD_KEY;
+		
+		cmdsByState[TelephonyManager.CALL_STATE_RINGING % N_CALL_STATES] =
+				NO_OP_CMD_KEY;
+		
+		DEFAULT_CONFIGURATION.put(TWO_PRESS_KEY, cmdsByState);
+		
+		// Three press default configuration.
+		cmdsByState	= new String[N_CALL_STATES];
+
+		cmdsByState[TelephonyManager.CALL_STATE_IDLE % N_CALL_STATES] =
+			PREVIOUS_CMD_KEY;
+		
+		cmdsByState[TelephonyManager.CALL_STATE_OFFHOOK % N_CALL_STATES] =
+				NO_OP_CMD_KEY;
+		
+		cmdsByState[TelephonyManager.CALL_STATE_RINGING % N_CALL_STATES] =
+				NO_OP_CMD_KEY;
+		
+		DEFAULT_CONFIGURATION.put(THREE_PRESS_KEY, cmdsByState);
+		
+		// Four press default configuration.
+		cmdsByState	= new String[N_CALL_STATES];
+
+		cmdsByState[TelephonyManager.CALL_STATE_IDLE % N_CALL_STATES] =
+			MUTE_MUSIC_CMD_KEY;
+		
+		cmdsByState[TelephonyManager.CALL_STATE_OFFHOOK % N_CALL_STATES] =
+				NO_OP_CMD_KEY;
+		
+		cmdsByState[TelephonyManager.CALL_STATE_RINGING % N_CALL_STATES] =
+				NO_OP_CMD_KEY;
+		
+		DEFAULT_CONFIGURATION.put(FOUR_PRESS_KEY, cmdsByState);
+		
+	}
 	
 	
 }
