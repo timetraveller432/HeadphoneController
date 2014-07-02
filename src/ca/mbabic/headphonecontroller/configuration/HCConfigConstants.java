@@ -224,6 +224,12 @@ public class HCConfigConstants {
 		
 	}
 	
+	/**
+	 * Encoding of default commands for each input sequence.
+	 * Map from input sequence key to an array of strings such that the 
+	 * (i_th % N_CALL_STATES) string in the array is the key of the command
+	 * to be executed in the default configuration.
+	 */
 	public static final HashMap<String, String[]> DEFAULT_CONFIGURATION;
 	static {
 		
