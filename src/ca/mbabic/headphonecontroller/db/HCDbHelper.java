@@ -1,5 +1,8 @@
 package ca.mbabic.headphonecontroller.db;
 
+import java.util.ArrayList;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -39,29 +42,58 @@ public class HCDbHelper extends SQLiteOpenHelper {
 
 		HCDbTable table;
 		
-		// Create CallState table.
+		// Create CallState table and insert default values.
 		table = new HCCallStateTable();
 		table.onCreate(db);
+		
+		for (ContentValues cv : table.getDefaultValues()) {
+			
+			db.insert(table.getTableName(), null, cv);
+			
+		}
 		
 		// Create Command table.
 		table = new HCCommandTable();
 		table.onCreate(db);
 		
+		for (ContentValues cv : table.getDefaultValues()) {
+			
+			db.insert(table.getTableName(), null, cv);
+			
+		}
+		
 		// Create InputSequence table.
 		table = new HCInputSequenceTable();
 		table.onCreate(db);
+		
+		for (ContentValues cv : table.getDefaultValues()) {
+			
+			db.insert(table.getTableName(), null, cv);
+			
+		}
 		
 		// Create table encoding which commands can be called from which
 		// call states.
 		table = new HCCommandCallStateTable();
 		table.onCreate(db);
 		
+		for (ContentValues cv : table.getDefaultValues()) {
+			
+			db.insert(table.getTableName(), null, cv);
+			
+		}
+		
+		
 		// Create table encoding which commands are set for each input sequence
 		// given a call state.
 		table = new HCInputSequenceCommandsTable();
 		table.onCreate(db);
 		
-		// TODO: insert default values into the tables.
+		for (ContentValues cv : table.getDefaultValues()) {
+			
+			db.insert(table.getTableName(), null, cv);
+			
+		}
 
 	}
 
